@@ -1,3 +1,1 @@
-const root = document.getElementById("root");
-
-console.dir(root);
+export * from "./app/index";
