@@ -2,14 +2,26 @@ import lottie from "lottie-web";
 
 interface LottieProps {
   src: string;
+  appContainer: HTMLElement;
 }
 
-class Lottie {
+class LottieLayer {
   src: string;
+  appContainer: HTMLElement;
+
   constructor(props: LottieProps) {
     this.src = props.src;
-    console.log(lottie);
+    this.appContainer = props.appContainer;
+  }
+
+  initLottie() {
+    const lottieContainer = document.createElement("div");
+
+    lottie.loadAnimation({
+      container: lottieContainer,
+      path: this.src,
+    });
   }
 }
 
-export default Lottie;
+export default LottieLayer;
