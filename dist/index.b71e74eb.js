@@ -598,21 +598,259 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"h7u1C":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _index = require("./app/index");
-parcelHelpers.exportAll(_index, exports);
+var _root = require("./app/root");
+parcelHelpers.exportAll(_root, exports);
 
-},{"./app/index":"jAm4q","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"jAm4q":[function(require,module,exports,__globalThis) {
+},{"./app/root":"kFUPj","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"kFUPj":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "root", ()=>root);
-var _lottie = require("./components/Lottie");
+var _config = require("../consts/config");
+var _configDefault = parcelHelpers.interopDefault(_config);
+var _lottie = require("./components/Lottie/Lottie");
 var _lottieDefault = parcelHelpers.interopDefault(_lottie);
-const root = document.getElementById("root");
-const lottie = new (0, _lottieDefault.default)({
-    src: "src"
-});
+const config = (0, _configDefault.default);
+class Scene {
+    constructor(rootId){
+        this.rootEl = document.getElementById(rootId);
+        this.lottieList = [];
+        this.initStaticLayers();
+        this.initLottieLayers();
+        this.appendControls();
+    }
+    createLayer(el, name, classes) {
+        const layerEl = document.createElement("div");
+        layerEl.classList.add(...classes);
+        layerEl.setAttribute("data-name", name);
+        layerEl.appendChild(el);
+        return layerEl;
+    }
+    appendControls() {
+        const controls = document.createElement("div");
+        controls.classList.add("controls");
+        this.lottieList.forEach((l)=>{
+            const toggle = document.createElement("div");
+            toggle.classList.add("control");
+            toggle.innerText = `${l.config.name}${l.config.once ? " (*)" : ""}`;
+            toggle.addEventListener("click", ()=>{
+                l.play();
+            });
+            l.ref.addEventListener("complete", ()=>{
+                if (l.config.once) toggle.classList.add("disabled");
+            });
+            controls.appendChild(toggle);
+        });
+        this.rootEl.appendChild(controls);
+    }
+    initLottieLayers() {
+        config.data.forEach((l)=>{
+            if (l.__typename === "LOTTIE") {
+                const lottie = new (0, _lottieDefault.default)({
+                    ...l,
+                    appContainer: this.rootEl
+                });
+                this.lottieList.push(lottie);
+                const layerEl = this.createLayer(lottie.lottieContainer, l.name, [
+                    "layer",
+                    "lottie"
+                ]);
+                this.rootEl.appendChild(layerEl);
+            }
+        });
+    }
+    initStaticLayers() {
+        config.data.forEach((layer)=>{
+            if (layer.__typename === "STATIC") {
+                const img = new Image();
+                img.src = [
+                    ".",
+                    "assets",
+                    layer.folder,
+                    layer.asset.src
+                ].join("/");
+                const layerEl = this.createLayer(img, layer.name, [
+                    "layer",
+                    "static"
+                ]);
+                this.rootEl.appendChild(layerEl);
+            }
+        });
+    }
+}
+new Scene("root");
+exports.default = Scene;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./components/Lottie":"kDygC"}],"bFA7W":[function(require,module,exports,__globalThis) {
+},{"../consts/config":"93LCw","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./components/Lottie/Lottie":"3WKLq"}],"93LCw":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+const config = {
+    data: [
+        {
+            __typename: "STATIC",
+            id: 0,
+            name: "background",
+            zIndex: 100,
+            paralaxAmount: 0,
+            folder: "00-background",
+            asset: {
+                src: "00-background.jpg",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 1,
+            name: "sun",
+            zIndex: 200,
+            paralaxAmount: 0,
+            folder: "01-sun",
+            asset: {
+                src: "01-sun.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 13,
+            name: "cloud-left",
+            zIndex: 1400,
+            paralaxAmount: 0,
+            folder: "13-cloud-left",
+            asset: {
+                src: "13-cloud-left.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 14,
+            name: "cloud-right",
+            zIndex: 1500,
+            paralaxAmount: 0,
+            folder: "14-cloud-right",
+            asset: {
+                src: "14-cloud_right.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "LOTTIE",
+            id: 2,
+            hideOnCompleted: false,
+            name: "crater",
+            zIndex: 300,
+            paralaxAmount: 0,
+            once: true,
+            folder: "02-crater"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 3,
+            hideOnCompleted: false,
+            name: "cloud-rain",
+            zIndex: 400,
+            paralaxAmount: 0,
+            once: true,
+            folder: "03-cloud-rain"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 4,
+            hideOnCompleted: false,
+            name: "box-right",
+            zIndex: 500,
+            paralaxAmount: 0,
+            once: false,
+            folder: "04-box-right"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 5,
+            hideOnCompleted: false,
+            name: "tree",
+            zIndex: 600,
+            paralaxAmount: 0,
+            once: false,
+            folder: "05-tree"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 6,
+            hideOnCompleted: true,
+            name: "bird-white",
+            zIndex: 700,
+            paralaxAmount: 0,
+            once: true,
+            folder: "06-bird-white"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 7,
+            hideOnCompleted: false,
+            name: "box-left",
+            zIndex: 800,
+            paralaxAmount: 0,
+            once: false,
+            folder: "07-box-left1"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 8,
+            hideOnCompleted: false,
+            name: "box-left2",
+            zIndex: 900,
+            paralaxAmount: 0,
+            once: false,
+            folder: "08-box-left2"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 9,
+            hideOnCompleted: false,
+            name: "cloud-center1",
+            zIndex: 1000,
+            paralaxAmount: 0,
+            once: false,
+            folder: "09-cloud-center1"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 10,
+            hideOnCompleted: false,
+            name: "cloud-center2",
+            zIndex: 1100,
+            paralaxAmount: 0,
+            once: false,
+            folder: "10-cloud-center2"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 11,
+            hideOnCompleted: false,
+            name: "flowers",
+            zIndex: 1200,
+            paralaxAmount: 0,
+            once: false,
+            folder: "11-flowers"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 12,
+            hideOnCompleted: true,
+            name: "bird-orange",
+            zIndex: 1300,
+            paralaxAmount: 0,
+            once: true,
+            folder: "12-bird-orange"
+        }
+    ]
+};
+exports.default = config;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"bFA7W":[function(require,module,exports,__globalThis) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -642,18 +880,44 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"kDygC":[function(require,module,exports,__globalThis) {
+},{}],"3WKLq":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _lottieWeb = require("lottie-web");
 var _lottieWebDefault = parcelHelpers.interopDefault(_lottieWeb);
-class Lottie {
+class LottiePlayer {
     constructor(props){
-        this.src = props.src;
-        console.log((0, _lottieWebDefault.default));
+        this.config = props;
+        this.appContainer = props.appContainer;
+        this.ref = null;
+        this.initLottie();
+    }
+    initLottie() {
+        this.lottieContainer = document.createElement("div");
+        this.ref = (0, _lottieWebDefault.default).loadAnimation({
+            container: this.lottieContainer,
+            path: [
+                ".",
+                "assets",
+                this.config.folder,
+                "data.json"
+            ].join("/"),
+            autoplay: false,
+            loop: false,
+            renderer: "canvas"
+        });
+        this.ref.addEventListener("complete", ()=>{
+            if (this.config.hideOnCompleted) this.ref.destroy();
+            if (this.config.once) return;
+            this.ref.goToAndStop(0);
+        });
+    }
+    play() {
+        if (!this.ref.isPaused) return;
+        this.ref.play();
     }
 }
-exports.default = Lottie;
+exports.default = LottiePlayer;
 
 },{"lottie-web":"jAIvy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"jAIvy":[function(require,module,exports,__globalThis) {
 typeof navigator !== "undefined" && function(global, factory) {

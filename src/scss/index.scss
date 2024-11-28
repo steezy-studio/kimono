@@ -11,8 +11,50 @@ span {
   display: inline;
 }
 
-#root {
-  background-color: gray;
-  height: 100vh;
+img {
+  width: 100%;
+  display: block;
+}
+
+.root {
+  width: 100vw;
+  aspect-ratio: 16/9;
   position: relative;
+}
+
+.layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+
+  div {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.controls {
+  position: fixed;
+  bottom: 0;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  column-gap: 3px;
+
+  .control {
+    width: auto;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    background-color: gray;
+
+    &.disabled {
+      background-color: #444;
+      color: #777;
+      cursor: not-allowed;
+    }
+  }
 }

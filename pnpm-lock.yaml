@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@parcel/config-default':
+        specifier: ^2.13.2
+        version: 2.13.2(@parcel/core@2.13.2(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(typescript@5.7.2)
       lottie-web:
         specifier: ^5.12.2
         version: 5.12.2
@@ -18,9 +21,15 @@ importers:
       '@parcel/transformer-sass':
         specifier: 2.13.2
         version: 2.13.2(@parcel/core@2.13.2(@swc/helpers@0.5.15))
+      '@types/node':
+        specifier: ^22.10.1
+        version: 22.10.1
       parcel:
         specifier: ^2.13.2
         version: 2.13.2(@swc/helpers@0.5.15)(typescript@5.7.2)
+      parcel-reporter-static-files-copy:
+        specifier: ^1.5.3
+        version: 1.5.3(@parcel/core@2.13.2(@swc/helpers@0.5.15))
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -498,6 +507,9 @@ packages:
   '@swc/types@0.1.17':
     resolution: {integrity: sha512-V5gRru+aD8YVyCOMAjMpWR1Ui577DD5KSJsHP8RAxopAH22jFz6GZd/qxqjO6MJHQhcsjvjOFXyDhyLQUnMveQ==}
 
+  '@types/node@22.10.1':
+    resolution: {integrity: sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==}
+
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
@@ -852,6 +864,10 @@ packages:
   ordered-binary@1.5.3:
     resolution: {integrity: sha512-oGFr3T+pYdTGJ+YFEILMpS3es+GiIbs9h/XQrclBXUtd44ey7XwfsMzM31f64I1SQOawDoDr/D823kNCADI8TA==}
 
+  parcel-reporter-static-files-copy@1.5.3:
+    resolution: {integrity: sha512-Ukq2SyJYn3GFIPCLamXuQ+2t+0j54llujjOUoRjtmVvfsuGnJDEpMznADeIoKuQDvy0jpxtWzWkQvxqI/j+U4A==}
+    engines: {parcel: ^2.0.0-beta.1}
+
   parcel@2.13.2:
     resolution: {integrity: sha512-ROp1Lf6cihWYzdkieXH+KWVkjlqiUMqW18MBMNZQ3sQitnXWGozTgSYIfpUFLQqaHLgBfm5inOwdqmbzExdpYA==}
     engines: {node: '>= 16.0.0'}
@@ -956,6 +972,9 @@ packages:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   update-browserslist-db@1.1.1:
     resolution: {integrity: sha512-R8UzCaa9Az+38REPiJ1tXlImTJXlVfgHZsglwBD/k6nj76ctsH1E3q4doGrukiLQd3sGQYu56r5+lo5r94l29A==}
@@ -1683,6 +1702,10 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
+  '@types/node@22.10.1':
+    dependencies:
+      undici-types: 6.20.0
+
   ansi-styles@4.3.0:
     dependencies:
       color-convert: 2.0.1
@@ -1974,6 +1997,12 @@ snapshots:
 
   ordered-binary@1.5.3: {}
 
+  parcel-reporter-static-files-copy@1.5.3(@parcel/core@2.13.2(@swc/helpers@0.5.15)):
+    dependencies:
+      '@parcel/plugin': 2.13.2(@parcel/core@2.13.2(@swc/helpers@0.5.15))
+    transitivePeerDependencies:
+      - '@parcel/core'
+
   parcel@2.13.2(@swc/helpers@0.5.15)(typescript@5.7.2):
     dependencies:
       '@parcel/config-default': 2.13.2(@parcel/core@2.13.2(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(typescript@5.7.2)
@@ -2080,6 +2109,8 @@ snapshots:
   type-fest@0.20.2: {}
 
   typescript@5.7.2: {}
+
+  undici-types@6.20.0: {}
 
   update-browserslist-db@1.1.1(browserslist@4.24.2):
     dependencies:
