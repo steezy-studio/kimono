@@ -1,3 +1,4 @@
+import * as dat from "dat.gui";
 import _config, { Config, ConfigItem } from "../consts/config";
 import isTouchDevice from "../utils/isTouchDevice";
 import {
@@ -12,6 +13,7 @@ class Scene {
   sceneItems: HTMLElement[];
   paralaxDestination: { x: number; y: number };
   paralaxPosition: { x: number; y: number };
+  paralaxStrength: number;
 
   constructor(rootId: string) {
     this.rootEl = document.getElementById(rootId)!;
@@ -19,11 +21,28 @@ class Scene {
     this.sceneItems = [];
     this.paralaxDestination = { x: 0, y: 0 };
     this.paralaxPosition = { x: 0, y: 0 };
+    this.paralaxStrength = 100;
     this.initStaticLayers();
     this.initLottieLayers();
     this.appendControls();
     this.attachParalax();
     this.raf();
+    this.addGUI();
+  }
+
+  addGUI() {
+    const gui = new dat.GUI({ name: "Settings" });
+    const folder = gui.addFolder("paralaxAmount");
+
+    this.sceneItems.forEach((el) => {
+      const name = el.dataset.name!;
+      const paralaxAmount = Number(el.dataset.paralaxAmount);
+      folder
+        .add({ [name]: paralaxAmount }, name, 0, this.paralaxStrength)
+        .onChange((val) => {
+          el.setAttribute("data-paralax-amount", val);
+        });
+    });
   }
 
   raf() {
@@ -63,7 +82,7 @@ class Scene {
     layerEl.setAttribute("data-name", config.name);
     layerEl.setAttribute(
       "data-paralax-amount",
-      String(100 * config.paralaxAmount),
+      String(this.paralaxStrength * config.paralaxAmount),
     );
     this.sceneItems.push(layerEl);
     layerEl.appendChild(el);
