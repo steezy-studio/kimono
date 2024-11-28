@@ -99,6 +99,12 @@ class Scene {
       toggle.addEventListener("click", () => {
         l.play();
       });
+      toggle.addEventListener("mouseenter", () => {
+        l.lottieContainer.classList.add("hover");
+      });
+      toggle.addEventListener("mouseleave", () => {
+        l.lottieContainer.classList.remove("hover");
+      });
 
       l.ref.addEventListener("complete", () => {
         if (l.config.once) {
