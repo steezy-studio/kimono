@@ -15,7 +15,6 @@ img {
 }
 
 .viewport {
-  background-color: red;
   width: 100vw;
   height: auto;
 }
@@ -33,6 +32,7 @@ img {
   aspect-ratio: 16 / 9;
   height: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .layer {

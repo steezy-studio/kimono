@@ -606,28 +606,74 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _config = require("../consts/config");
 var _configDefault = parcelHelpers.interopDefault(_config);
+var _isTouchDevice = require("../utils/isTouchDevice");
+var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
 var _lottie = require("./components/Lottie/Lottie");
 var _lottieDefault = parcelHelpers.interopDefault(_lottie);
 const config = (0, _configDefault.default);
 class Scene {
     constructor(rootId){
         this.rootEl = document.getElementById(rootId);
-        this.lottieList = [];
+        this.lottieItems = [];
+        this.sceneItems = [];
+        this.paralaxDestination = {
+            x: 0,
+            y: 0
+        };
+        this.paralaxPosition = {
+            x: 0,
+            y: 0
+        };
         this.initStaticLayers();
         this.initLottieLayers();
         this.appendControls();
+        this.attachParalax();
+        this.raf();
     }
-    createLayer(el, name, classes) {
+    raf() {
+        const distX = this.paralaxDestination.x - this.paralaxPosition.x;
+        const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+        const step = 0.05;
+        this.paralaxPosition.x += distX * step;
+        this.paralaxPosition.y += distY * step;
+        this.sceneItems.forEach((item)=>{
+            const distance = Number(item.dataset.paralaxAmount);
+            const x = this.paralaxPosition.x * distance;
+            const y = this.paralaxPosition.y * distance;
+            item.style.transform = `translate(${x}px, ${y}px)`;
+        });
+        window.requestAnimationFrame(this.raf.bind(this));
+    }
+    attachParalax() {
+        // TODO: add mby drag event
+        if ((0, _isTouchDeviceDefault.default)()) return;
+        function handleMouseMove(e) {
+            const w = this.rootEl.clientWidth;
+            const h = this.rootEl.clientHeight;
+            const x = e.clientX;
+            const y = e.clientY;
+            const normX = (x - w / 2) / (w / 2);
+            const normY = (y - h / 2) / (h / 2);
+            this.paralaxDestination = {
+                x: normX,
+                y: normY
+            };
+        }
+        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
+    }
+    createLayer(el, config, classes) {
         const layerEl = document.createElement("div");
         layerEl.classList.add(...classes);
-        layerEl.setAttribute("data-name", name);
+        layerEl.setAttribute("data-name", config.name);
+        layerEl.setAttribute("data-paralax-amount", String(100 * config.paralaxAmount));
+        this.sceneItems.push(layerEl);
         layerEl.appendChild(el);
         return layerEl;
     }
     appendControls() {
         const controls = document.createElement("div");
         controls.classList.add("controls");
-        this.lottieList.forEach((l)=>{
+        this.lottieItems.forEach((l)=>{
             const toggle = document.createElement("div");
             toggle.classList.add("control");
             toggle.innerText = `${l.config.name}${l.config.once ? " (*)" : ""}`;
@@ -642,14 +688,14 @@ class Scene {
         this.rootEl.appendChild(controls);
     }
     initLottieLayers() {
-        config.data.forEach((l)=>{
-            if (l.__typename === "LOTTIE") {
+        config.data.forEach((layer)=>{
+            if (layer.__typename === "LOTTIE") {
                 const lottie = new (0, _lottieDefault.default)({
-                    ...l,
+                    ...layer,
                     appContainer: this.rootEl
                 });
-                this.lottieList.push(lottie);
-                const layerEl = this.createLayer(lottie.lottieContainer, l.name, [
+                this.lottieItems.push(lottie);
+                const layerEl = this.createLayer(lottie.lottieContainer, layer, [
                     "layer",
                     "lottie"
                 ]);
@@ -667,7 +713,7 @@ class Scene {
                     layer.folder,
                     layer.asset.src
                 ].join("/");
-                const layerEl = this.createLayer(img, layer.name, [
+                const layerEl = this.createLayer(img, layer, [
                     "layer",
                     "static"
                 ]);
@@ -679,7 +725,7 @@ class Scene {
 new Scene("root");
 exports.default = Scene;
 
-},{"../consts/config":"93LCw","./components/Lottie/Lottie":"3WKLq","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"93LCw":[function(require,module,exports,__globalThis) {
+},{"../consts/config":"93LCw","../utils/isTouchDevice":"3VOhl","./components/Lottie/Lottie":"3WKLq","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"93LCw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 const config = {
@@ -702,7 +748,7 @@ const config = {
             id: 1,
             name: "sun",
             zIndex: 200,
-            paralaxAmount: 0,
+            paralaxAmount: 0.02,
             folder: "01-sun",
             asset: {
                 src: "01-sun.png",
@@ -715,7 +761,7 @@ const config = {
             id: 13,
             name: "cloud-left",
             zIndex: 1400,
-            paralaxAmount: 0,
+            paralaxAmount: 0.05,
             folder: "13-cloud-left",
             asset: {
                 src: "13-cloud-left.png",
@@ -728,7 +774,7 @@ const config = {
             id: 14,
             name: "cloud-right",
             zIndex: 1500,
-            paralaxAmount: 0,
+            paralaxAmount: 0.05,
             folder: "14-cloud-right",
             asset: {
                 src: "14-cloud_right.png",
@@ -752,7 +798,7 @@ const config = {
             hideOnCompleted: false,
             name: "cloud-rain",
             zIndex: 400,
-            paralaxAmount: 0,
+            paralaxAmount: 0.04,
             once: true,
             folder: "03-cloud-rain"
         },
@@ -762,7 +808,7 @@ const config = {
             hideOnCompleted: false,
             name: "box-right",
             zIndex: 500,
-            paralaxAmount: 0,
+            paralaxAmount: 0.1,
             once: false,
             folder: "04-box-right"
         },
@@ -772,7 +818,7 @@ const config = {
             hideOnCompleted: false,
             name: "tree",
             zIndex: 600,
-            paralaxAmount: 0,
+            paralaxAmount: 0.01,
             once: false,
             folder: "05-tree"
         },
@@ -782,7 +828,7 @@ const config = {
             hideOnCompleted: true,
             name: "bird-white",
             zIndex: 700,
-            paralaxAmount: 0,
+            paralaxAmount: 0.2,
             once: true,
             folder: "06-bird-white"
         },
@@ -792,7 +838,7 @@ const config = {
             hideOnCompleted: false,
             name: "box-left",
             zIndex: 800,
-            paralaxAmount: 0,
+            paralaxAmount: 0.2,
             once: false,
             folder: "07-box-left1"
         },
@@ -802,7 +848,7 @@ const config = {
             hideOnCompleted: false,
             name: "box-left2",
             zIndex: 900,
-            paralaxAmount: 0,
+            paralaxAmount: 0.5,
             once: false,
             folder: "08-box-left2"
         },
@@ -812,7 +858,7 @@ const config = {
             hideOnCompleted: false,
             name: "cloud-center1",
             zIndex: 1000,
-            paralaxAmount: 0,
+            paralaxAmount: 0.02,
             once: false,
             folder: "09-cloud-center1"
         },
@@ -822,7 +868,7 @@ const config = {
             hideOnCompleted: false,
             name: "cloud-center2",
             zIndex: 1100,
-            paralaxAmount: 0,
+            paralaxAmount: 0.02,
             once: false,
             folder: "10-cloud-center2"
         },
@@ -832,7 +878,7 @@ const config = {
             hideOnCompleted: false,
             name: "flowers",
             zIndex: 1200,
-            paralaxAmount: 0,
+            paralaxAmount: 0.03,
             once: false,
             folder: "11-flowers"
         },
@@ -842,7 +888,7 @@ const config = {
             hideOnCompleted: true,
             name: "bird-orange",
             zIndex: 1300,
-            paralaxAmount: 0,
+            paralaxAmount: 0.4,
             once: true,
             folder: "12-bird-orange"
         }
@@ -880,7 +926,17 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"3WKLq":[function(require,module,exports,__globalThis) {
+},{}],"3VOhl":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>isTouchDevice);
+"use client";
+function isTouchDevice() {
+    if (typeof window === "undefined") return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3WKLq":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _lottieWeb = require("lottie-web");

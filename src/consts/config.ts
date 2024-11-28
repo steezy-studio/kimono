@@ -21,7 +21,9 @@ export interface StaticLayer extends BaseLayer {
   };
 }
 
-export type Config = { data: (LottieLayer | StaticLayer)[] };
+export type ConfigItem = LottieLayer | StaticLayer;
+
+export type Config = { data: ConfigItem[] };
 
 const config = {
   data: [
@@ -43,7 +45,7 @@ const config = {
       id: 1,
       name: "sun",
       zIndex: 200,
-      paralaxAmount: 0,
+      paralaxAmount: 0.02,
       folder: "01-sun",
       asset: {
         src: "01-sun.png",
@@ -56,7 +58,7 @@ const config = {
       id: 13,
       name: "cloud-left",
       zIndex: 1400,
-      paralaxAmount: 0,
+      paralaxAmount: 0.05,
       folder: "13-cloud-left",
       asset: {
         src: "13-cloud-left.png",
@@ -69,7 +71,7 @@ const config = {
       id: 14,
       name: "cloud-right",
       zIndex: 1500,
-      paralaxAmount: 0,
+      paralaxAmount: 0.05,
       folder: "14-cloud-right",
       asset: {
         src: "14-cloud_right.png",
@@ -77,7 +79,6 @@ const config = {
         height: 1080,
       },
     },
-
     {
       __typename: "LOTTIE",
       id: 2,
@@ -94,7 +95,7 @@ const config = {
       hideOnCompleted: false,
       name: "cloud-rain",
       zIndex: 400,
-      paralaxAmount: 0,
+      paralaxAmount: 0.04,
       once: true,
       folder: "03-cloud-rain",
     },
@@ -104,7 +105,7 @@ const config = {
       hideOnCompleted: false,
       name: "box-right",
       zIndex: 500,
-      paralaxAmount: 0,
+      paralaxAmount: 0.1,
       once: false,
       folder: "04-box-right",
     },
@@ -114,7 +115,7 @@ const config = {
       hideOnCompleted: false,
       name: "tree",
       zIndex: 600,
-      paralaxAmount: 0,
+      paralaxAmount: 0.01,
       once: false,
       folder: "05-tree",
     },
@@ -124,7 +125,7 @@ const config = {
       hideOnCompleted: true,
       name: "bird-white",
       zIndex: 700,
-      paralaxAmount: 0,
+      paralaxAmount: 0.2,
       once: true,
       folder: "06-bird-white",
     },
@@ -134,7 +135,7 @@ const config = {
       hideOnCompleted: false,
       name: "box-left",
       zIndex: 800,
-      paralaxAmount: 0,
+      paralaxAmount: 0.2,
       once: false,
       folder: "07-box-left1",
     },
@@ -144,7 +145,7 @@ const config = {
       hideOnCompleted: false,
       name: "box-left2",
       zIndex: 900,
-      paralaxAmount: 0,
+      paralaxAmount: 0.5,
       once: false,
       folder: "08-box-left2",
     },
@@ -154,7 +155,7 @@ const config = {
       hideOnCompleted: false,
       name: "cloud-center1",
       zIndex: 1000,
-      paralaxAmount: 0,
+      paralaxAmount: 0.02,
       once: false,
       folder: "09-cloud-center1",
     },
@@ -164,7 +165,7 @@ const config = {
       hideOnCompleted: false,
       name: "cloud-center2",
       zIndex: 1100,
-      paralaxAmount: 0,
+      paralaxAmount: 0.02,
       once: false,
       folder: "10-cloud-center2",
     },
@@ -174,7 +175,7 @@ const config = {
       hideOnCompleted: false,
       name: "flowers",
       zIndex: 1200,
-      paralaxAmount: 0,
+      paralaxAmount: 0.03,
       once: false,
       folder: "11-flowers",
     },
@@ -184,7 +185,7 @@ const config = {
       hideOnCompleted: true,
       name: "bird-orange",
       zIndex: 1300,
-      paralaxAmount: 0,
+      paralaxAmount: 0.4,
       once: true,
       folder: "12-bird-orange",
     },
