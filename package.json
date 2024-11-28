@@ -4,21 +4,24 @@
   "description": "",
   "scripts": {
     "clear": "rm -rf dist .parcel-config",
-    "dev": "pnpm clear && parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "dev": "pnpm clear && parcel src/index.html --no-cache",
+    "build": "parcel build src/index.html --no-cache"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@parcel/transformer-sass": "2.13.2",
+    "@types/dat.gui": "^0.7.13",
     "@types/node": "^22.10.1",
     "parcel": "^2.13.2",
     "parcel-reporter-static-files-copy": "^1.5.3",
+    "sass": "^1.81.0",
     "typescript": "^5.7.2"
   },
   "dependencies": {
     "@parcel/config-default": "^2.13.2",
+    "dat.gui": "^0.7.9",
     "lottie-web": "^5.12.2",
     "motion": "^11.12.0"
   }
