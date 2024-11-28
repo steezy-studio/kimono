@@ -679,7 +679,7 @@ class Scene {
 new Scene("root");
 exports.default = Scene;
 
-},{"../consts/config":"93LCw","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./components/Lottie/Lottie":"3WKLq"}],"93LCw":[function(require,module,exports,__globalThis) {
+},{"../consts/config":"93LCw","./components/Lottie/Lottie":"3WKLq","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"93LCw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 const config = {

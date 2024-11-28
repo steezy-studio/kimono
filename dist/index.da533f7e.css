@@ -14,9 +14,24 @@ img {
   display: block;
 }
 
+.viewport {
+  background-color: red;
+  width: 100vw;
+  height: auto;
+}
+
+@media (width <= 1023px) {
+  .viewport {
+    aspect-ratio: 1;
+    justify-content: center;
+    display: flex;
+    overflow: hidden;
+  }
+}
+
 .root {
   aspect-ratio: 16 / 9;
-  width: 100vw;
+  height: 100%;
   position: relative;
 }
 
@@ -33,9 +48,10 @@ img {
 }
 
 .controls {
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  column-gap: 3px;
+  gap: 3px;
   width: 100%;
   display: flex;
   position: fixed;
@@ -46,7 +62,8 @@ img {
 
 .controls .control {
   cursor: pointer;
-  background-color: gray;
+  background-color: #ccc;
+  border-radius: 99px;
   width: auto;
   padding: .5em 1em;
 }

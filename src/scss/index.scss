@@ -16,8 +16,21 @@ img {
   display: block;
 }
 
-.root {
+.viewport {
   width: 100vw;
+  height: auto;
+  background-color: red;
+
+  @media (max-width: 1023px) {
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+}
+
+.root {
+  height: 100%;
   aspect-ratio: 16/9;
   position: relative;
 }
@@ -40,16 +53,18 @@ img {
   right: 50%;
   transform: translateX(50%);
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   align-items: center;
   justify-content: center;
-  column-gap: 3px;
+  gap: 3px;
 
   .control {
     width: auto;
     padding: 0.5em 1em;
     cursor: pointer;
-    background-color: gray;
+    background-color: #ccc;
+    border-radius: 99px;
 
     &.disabled {
       background-color: #444;
