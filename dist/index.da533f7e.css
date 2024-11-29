@@ -30,20 +30,40 @@ img {
 }
 
 .layer {
+  pointer-events: none;
   width: 100%;
   height: 100%;
   position: absolute;
   inset: 0;
 }
 
+.layer.hover div {
+  transform: scale(1.015);
+}
+
+.layer svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.layer svg path {
+  opacity: 0;
+}
+
+.layer svg.show path {
+  opacity: .5;
+}
+
+.layer path {
+  pointer-events: all;
+}
+
 .layer div {
   width: 100%;
   height: 100%;
   transition: transform .3s ease-in-out;
-}
-
-.layer div.hover {
-  transform: scale(1.015);
 }
 
 .controls {

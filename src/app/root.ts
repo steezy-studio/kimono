@@ -1,5 +1,6 @@
 import * as dat from "dat.gui";
 import _config, { Config, ConfigItem } from "../consts/config";
+import createElementFromString from "../utils/createElementFromString";
 import isTouchDevice from "../utils/isTouchDevice";
 import {
   default as Lottie,
@@ -24,7 +25,6 @@ class Scene {
     this.paralaxStrength = 100;
     this.initStaticLayers();
     this.initLottieLayers();
-    this.appendControls();
     this.attachParalax();
     this.raf();
     this.addGUI();
@@ -33,6 +33,18 @@ class Scene {
   addGUI() {
     const gui = new dat.GUI({ name: "Settings" });
     const folder = gui.addFolder("paralaxAmount");
+    folder.open();
+
+    gui.add({ "event-maps": false }, "event-maps").onChange((val) => {
+      const eventMaps = document.querySelectorAll(".layer svg");
+      eventMaps.forEach((obj) => {
+        if (val) {
+          obj.classList.add("show");
+        } else {
+          obj.classList.remove("show");
+        }
+      });
+    });
 
     this.sceneItems.forEach((el) => {
       const name = el.dataset.name!;
@@ -62,7 +74,6 @@ class Scene {
   }
 
   attachParalax() {
-    // TODO: add mby drag event
     if (isTouchDevice()) return;
     function handleMouseMove(e: MouseEvent) {
       const w = this.rootEl.clientWidth;
@@ -89,44 +100,32 @@ class Scene {
     return layerEl;
   }
 
-  appendControls() {
-    const controls = document.createElement("div");
-    controls.classList.add("controls");
-    this.lottieItems.forEach((l) => {
-      const toggle = document.createElement("div");
-      toggle.classList.add("control");
-      toggle.innerText = `${l.config.name}${l.config.once ? " (*)" : ""}`;
-      toggle.addEventListener("click", () => {
-        l.play();
-      });
-      toggle.addEventListener("mouseenter", () => {
-        l.lottieContainer.classList.add("hover");
-      });
-      toggle.addEventListener("mouseleave", () => {
-        l.lottieContainer.classList.remove("hover");
-      });
-
-      l.ref.addEventListener("complete", () => {
-        if (l.config.once) {
-          toggle.classList.add("disabled");
-        }
-      });
-
-      controls.appendChild(toggle);
-    });
-    this.rootEl.appendChild(controls);
-  }
-
   initLottieLayers() {
     config.data.forEach((layer) => {
       if (layer.__typename === "LOTTIE") {
+        const svgSrc = [".", "assets", layer.folder, "object.svg"].join("/");
         const lottie = new Lottie({ ...layer, appContainer: this.rootEl });
-        this.lottieItems.push(lottie);
         const layerEl = this.createLayer(lottie.lottieContainer, layer, [
           "layer",
           "lottie",
         ]);
+
+        createElementFromString<SVGElement>(svgSrc).then((svg) => {
+          layerEl.appendChild(svg!);
+          const path = svg.querySelector("g path");
+          path?.addEventListener("click", () => {
+            lottie.play();
+          });
+          path?.addEventListener("mouseenter", () => {
+            layerEl.classList.add("hover");
+          });
+          path?.addEventListener("mouseleave", () => {
+            layerEl.classList.remove("hover");
+          });
+        });
+
         this.rootEl.appendChild(layerEl);
+        this.lottieItems.push(lottie);
       }
     });
   }
