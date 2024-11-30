@@ -2988,7 +2988,7 @@ class Scene extends (0, _baseSceneDefault.default) {
                 setTimeout(()=>{
                     item.classList.add("show");
                     res("");
-                }, i * 300);
+                }, i * 150);
             });
         });
         Promise.all(staggeredScene).then(this.onReady);
@@ -2999,6 +2999,7 @@ class Scene extends (0, _baseSceneDefault.default) {
         const step = 0.01;
         this.sunPosition += distance * step;
         this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
+        this.sunEl.style.transformOrigin = `50% 50%`;
         this.isSunUp = this.sunPosition >= 0.99;
         if (this.isSunUp) this.revealScene();
     }

@@ -28,7 +28,7 @@ class Scene extends BaseScene {
         setTimeout(() => {
           item.classList.add("show");
           res("");
-        }, i * 300);
+        }, i * 150);
       });
     });
 
@@ -41,6 +41,7 @@ class Scene extends BaseScene {
     const step = 0.01;
     this.sunPosition += distance * step;
     this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
+    this.sunEl.style.transformOrigin = `50% 50%`;
     this.isSunUp = this.sunPosition >= 0.99;
 
     if (this.isSunUp) {
