@@ -604,146 +604,39 @@ parcelHelpers.exportAll(_root, exports);
 },{"./app/root":"kFUPj","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"kFUPj":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _datGui = require("dat.gui");
-var _config = require("../consts/config");
-var _configDefault = parcelHelpers.interopDefault(_config);
-var _isTouchDevice = require("../utils/isTouchDevice");
-var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
-var _lottie = require("./components/Lottie/Lottie");
-var _lottieDefault = parcelHelpers.interopDefault(_lottie);
-const config = (0, _configDefault.default);
-class Scene {
-    constructor(rootId){
-        this.rootEl = document.getElementById(rootId);
-        this.lottieItems = [];
-        this.sceneItems = [];
-        this.paralaxDestination = {
-            x: 0,
-            y: 0
-        };
-        this.paralaxPosition = {
-            x: 0,
-            y: 0
-        };
-        this.paralaxStrength = 100;
-        this.initStaticLayers();
-        this.initLottieLayers();
-        this.appendControls();
-        this.attachParalax();
-        this.raf();
-        this.addGUI();
-    }
-    addGUI() {
-        const gui = new _datGui.GUI({
-            name: "Settings"
+var _scene = require("./modules/Scene");
+var _sceneDefault = parcelHelpers.interopDefault(_scene);
+const dat = require("2dd0c2de9c45054f");
+new (0, _sceneDefault.default)("root").onReady = ()=>{
+    const gui = new dat.GUI({
+        name: "Settings"
+    });
+    gui.close();
+    const folder = gui.addFolder("paralaxAmount");
+    folder.open();
+    const layers = document.querySelectorAll(".layer");
+    gui.add({
+        "event-maps": false
+    }, "event-maps").onChange((val)=>{
+        const eventMaps = document.querySelectorAll(".layer svg");
+        eventMaps.forEach((obj)=>{
+            if (val) obj.classList.add("show");
+            else obj.classList.remove("show");
         });
-        const folder = gui.addFolder("paralaxAmount");
-        this.sceneItems.forEach((el)=>{
-            const name = el.dataset.name;
-            const paralaxAmount = Number(el.dataset.paralaxAmount);
-            folder.add({
-                [name]: paralaxAmount
-            }, name, 0, this.paralaxStrength).onChange((val)=>{
-                el.setAttribute("data-paralax-amount", val);
-            });
+    });
+    layers.forEach((el)=>{
+        const name = el.dataset.name;
+        const paralaxAmount = Number(el.dataset.paralaxAmount);
+        folder.add({
+            [name]: paralaxAmount
+        }, name, -1, 1).onChange((val)=>{
+            el.setAttribute("data-paralax-amount", val);
         });
-    }
-    raf() {
-        const distX = this.paralaxDestination.x - this.paralaxPosition.x;
-        const distY = this.paralaxDestination.y - this.paralaxPosition.y;
-        const step = 0.05;
-        this.paralaxPosition.x += distX * step;
-        this.paralaxPosition.y += distY * step;
-        this.sceneItems.forEach((item)=>{
-            const distance = Number(item.dataset.paralaxAmount);
-            const x = this.paralaxPosition.x * distance;
-            const y = this.paralaxPosition.y * distance;
-            item.style.transform = `translate(${x}px, ${y}px)`;
-        });
-        window.requestAnimationFrame(this.raf.bind(this));
-    }
-    attachParalax() {
-        // TODO: add mby drag event
-        if ((0, _isTouchDeviceDefault.default)()) return;
-        function handleMouseMove(e) {
-            const w = this.rootEl.clientWidth;
-            const h = this.rootEl.clientHeight;
-            const x = e.clientX;
-            const y = e.clientY;
-            const normX = (x - w / 2) / (w / 2);
-            const normY = (y - h / 2) / (h / 2);
-            this.paralaxDestination = {
-                x: normX,
-                y: normY
-            };
-        }
-        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
-    }
-    createLayer(el, config, classes) {
-        const layerEl = document.createElement("div");
-        layerEl.classList.add(...classes);
-        layerEl.setAttribute("data-name", config.name);
-        layerEl.setAttribute("data-paralax-amount", String(this.paralaxStrength * config.paralaxAmount));
-        this.sceneItems.push(layerEl);
-        layerEl.appendChild(el);
-        return layerEl;
-    }
-    appendControls() {
-        const controls = document.createElement("div");
-        controls.classList.add("controls");
-        this.lottieItems.forEach((l)=>{
-            const toggle = document.createElement("div");
-            toggle.classList.add("control");
-            toggle.innerText = `${l.config.name}${l.config.once ? " (*)" : ""}`;
-            toggle.addEventListener("click", ()=>{
-                l.play();
-            });
-            l.ref.addEventListener("complete", ()=>{
-                if (l.config.once) toggle.classList.add("disabled");
-            });
-            controls.appendChild(toggle);
-        });
-        this.rootEl.appendChild(controls);
-    }
-    initLottieLayers() {
-        config.data.forEach((layer)=>{
-            if (layer.__typename === "LOTTIE") {
-                const lottie = new (0, _lottieDefault.default)({
-                    ...layer,
-                    appContainer: this.rootEl
-                });
-                this.lottieItems.push(lottie);
-                const layerEl = this.createLayer(lottie.lottieContainer, layer, [
-                    "layer",
-                    "lottie"
-                ]);
-                this.rootEl.appendChild(layerEl);
-            }
-        });
-    }
-    initStaticLayers() {
-        config.data.forEach((layer)=>{
-            if (layer.__typename === "STATIC") {
-                const img = new Image();
-                img.src = [
-                    ".",
-                    "assets",
-                    layer.folder,
-                    layer.asset.src
-                ].join("/");
-                const layerEl = this.createLayer(img, layer, [
-                    "layer",
-                    "static"
-                ]);
-                this.rootEl.appendChild(layerEl);
-            }
-        });
-    }
-}
-new Scene("root");
-exports.default = Scene;
+    });
+};
+exports.default = (0, _sceneDefault.default);
 
-},{"dat.gui":"23Ud5","../consts/config":"93LCw","../utils/isTouchDevice":"3VOhl","./components/Lottie/Lottie":"3WKLq","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
+},{"2dd0c2de9c45054f":"23Ud5","./modules/Scene":"iSB58","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
 /**
  * dat-gui JavaScript Controller Library
  * https://github.com/dataarts/dat.gui
@@ -3064,7 +2957,206 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"93LCw":[function(require,module,exports,__globalThis) {
+},{}],"iSB58":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _isTouchDevice = require("../../../utils/isTouchDevice");
+var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
+var _baseScene = require("./BaseScene");
+var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
+class Scene extends (0, _baseSceneDefault.default) {
+    constructor(appId, onReady){
+        super(appId);
+        this.paralaxDestination = {
+            x: 0,
+            y: 0
+        };
+        this.paralaxPosition = {
+            x: 0,
+            y: 0
+        };
+        this.isSunUp = false;
+        this.sunPosition = 0;
+        this.sunEl = this.sceneItems.find((item)=>item.dataset.name === "sun");
+        this.onReady = onReady;
+        this.animate();
+        this.attachParalax();
+    }
+    revealScene() {
+        const staggeredScene = this.sceneItems.map((item, i)=>{
+            return new Promise((res)=>{
+                setTimeout(()=>{
+                    item.classList.add("show");
+                    res("");
+                }, i * 300);
+            });
+        });
+        Promise.all(staggeredScene).then(this.onReady);
+    }
+    sunrise() {
+        const sunTarget = this.loadedAssets / this.sceneItems.length;
+        const distance = sunTarget - this.sunPosition;
+        const step = 0.01;
+        this.sunPosition += distance * step;
+        this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
+        this.isSunUp = this.sunPosition >= 0.99;
+        if (this.isSunUp) this.revealScene();
+    }
+    paralax() {
+        const distX = this.paralaxDestination.x - this.paralaxPosition.x;
+        const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+        const step = 0.05;
+        this.paralaxPosition.x += distX * step;
+        this.paralaxPosition.y += distY * step;
+        this.sceneItems.forEach((item)=>{
+            const paralaxAmount = Number(item.dataset.paralaxAmount);
+            const distance = paralaxAmount * 100;
+            const x = this.paralaxPosition.x * distance;
+            const y = this.paralaxPosition.y * distance;
+            // item.style.transform = `scale(${1 - distX * paralaxAmount * 0.1}) translate(${x}px, ${y}px)`;
+            item.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    }
+    animate() {
+        function raf() {
+            if (this.isSunUp) this.paralax();
+            else this.sunrise();
+            window.requestAnimationFrame(raf.bind(this));
+        }
+        window.requestAnimationFrame(raf.bind(this));
+    }
+    attachParalax() {
+        if ((0, _isTouchDeviceDefault.default)()) return;
+        function handleMouseMove(e) {
+            const w = this.rootEl.clientWidth;
+            const h = this.rootEl.clientHeight;
+            const x = e.clientX;
+            const y = e.clientY;
+            const normX = (x - w / 2) / (w / 2);
+            const normY = (y - h / 2) / (h / 2);
+            this.paralaxDestination = {
+                x: normX,
+                y: normY
+            };
+        }
+        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
+    }
+}
+exports.default = Scene;
+
+},{"../../../utils/isTouchDevice":"3VOhl","./BaseScene":"aajsy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>isTouchDevice);
+"use client";
+function isTouchDevice() {
+    if (typeof window === "undefined") return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"aajsy":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _config = require("../../../consts/config");
+var _configDefault = parcelHelpers.interopDefault(_config);
+var _createElementFromString = require("../../../utils/createElementFromString");
+var _createElementFromStringDefault = parcelHelpers.interopDefault(_createElementFromString);
+var _lottie = require("../Lottie/Lottie");
+var _lottieDefault = parcelHelpers.interopDefault(_lottie);
+const config = (0, _configDefault.default);
+class BaseScene {
+    constructor(rootId){
+        this.rootEl = document.getElementById(rootId);
+        this.lottieItems = [];
+        this.sceneItems = [];
+        this.loadedAssets = 0;
+        this.loadScene();
+    }
+    async loadScene() {
+        await this.initStaticLayers();
+        await this.initLottieLayers();
+    }
+    createLayer(el, config, classes) {
+        const layerEl = document.createElement("div");
+        layerEl.classList.add(...classes);
+        layerEl.setAttribute("data-name", config.name);
+        layerEl.setAttribute("data-paralax-amount", String(config.paralaxAmount));
+        this.sceneItems.push(layerEl);
+        layerEl.appendChild(el);
+        return layerEl;
+    }
+    async initLottieLayers() {
+        config.data.forEach((layer)=>{
+            if (layer.__typename === "LOTTIE") {
+                const svgSrc = [
+                    ".",
+                    "assets",
+                    layer.folder,
+                    "object.svg"
+                ].join("/");
+                const lottie = new (0, _lottieDefault.default)({
+                    ...layer,
+                    appContainer: this.rootEl
+                });
+                const layerEl = this.createLayer(lottie.lottieContainer, layer, [
+                    "layer",
+                    "lottie"
+                ]);
+                // add event map svg element
+                (0, _createElementFromStringDefault.default)(svgSrc).then((svg)=>{
+                    layerEl.appendChild(svg);
+                    const path = svg.querySelector("g path");
+                    path?.addEventListener("click", ()=>{
+                        lottie.play();
+                    });
+                });
+                this.rootEl.appendChild(layerEl);
+                this.lottieItems.push(lottie);
+            }
+        });
+        const loadLotties = this.lottieItems.map((lottie)=>{
+            return new Promise((res)=>{
+                lottie.ref.addEventListener("loaded_images", (e)=>{
+                    this.loadedAssets++;
+                    res(e);
+                });
+            });
+        });
+        await Promise.all(loadLotties);
+    }
+    async initStaticLayers() {
+        let imgs = [];
+        config.data.forEach((layer)=>{
+            if (layer.__typename === "STATIC") {
+                const img = new Image();
+                img.src = [
+                    ".",
+                    "assets",
+                    layer.folder,
+                    layer.asset.src
+                ].join("/");
+                const layerEl = this.createLayer(img, layer, [
+                    "layer",
+                    "static"
+                ]);
+                this.rootEl.appendChild(layerEl);
+                imgs.push(img);
+            }
+        });
+        const loadImgs = imgs.map((img)=>{
+            return new Promise((res)=>{
+                img.onload = ()=>{
+                    this.loadedAssets++;
+                    res("");
+                };
+            });
+        });
+        await Promise.all(loadImgs);
+    }
+}
+exports.default = BaseScene;
+
+},{"../../../consts/config":"93LCw","../../../utils/createElementFromString":"32Xvb","../Lottie/Lottie":"fb5Qr","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"93LCw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 const config = {
@@ -3235,17 +3327,18 @@ const config = {
 };
 exports.default = config;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"32Xvb":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>isTouchDevice);
-"use client";
-function isTouchDevice() {
-    if (typeof window === "undefined") return false;
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+parcelHelpers.export(exports, "default", ()=>createElementFromString);
+async function createElementFromString(path) {
+    const res = await fetch(path);
+    const text = await res.text();
+    const el = new DOMParser().parseFromString(text, "text/xml");
+    return el.firstChild;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3WKLq":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"fb5Qr":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _lottieWeb = require("lottie-web");

@@ -30,10 +30,37 @@ img {
 }
 
 .layer {
+  pointer-events: none;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1.3s ease-in-out;
+  position: absolute;
+  inset: 0;
+}
+
+.layer.show, .layer[data-name="sun"], .layer[data-name="background"] {
+  opacity: 1;
+}
+
+.layer svg {
   width: 100%;
   height: 100%;
   position: absolute;
   inset: 0;
+}
+
+.layer svg path {
+  opacity: 0;
+  pointer-events: all;
+}
+
+.layer svg path:hover {
+  cursor: pointer;
+}
+
+.layer svg.show path {
+  opacity: .5;
 }
 
 .layer div {
@@ -49,22 +76,22 @@ img {
   width: 100%;
   display: flex;
   position: fixed;
-  bottom: 0;
+  bottom: 3px;
   right: 50%;
   transform: translateX(50%);
 }
 
 .controls .control {
   cursor: pointer;
-  background-color: #ccc;
+  background-color: #ffffff4d;
   border-radius: 99px;
   width: auto;
   padding: .5em 1em;
 }
 
 .controls .control.disabled {
-  color: #777;
+  color: #0000004d;
   cursor: not-allowed;
-  background-color: #444;
+  background-color: #0000001a;
 }
 /*# sourceMappingURL=index.da533f7e.css.map */
