@@ -33,10 +33,27 @@ img {
   height: 100%;
   inset: 0;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s ease-in-out;
 
-  &.hover div {
-    transform: scale(1.015);
+  &.show {
+    opacity: 1;
   }
+
+  &[data-name="sun"],
+  &[data-name="background"] {
+    opacity: 1;
+  }
+
+  // hover effect on scene items with lottie
+  /* &:has(path:hover)>* { */
+  /*   transform: scale(1.015); */
+  /* } */
+  /**/
+  /* svg, */
+  /* div { */
+  /*   transition: transform 0.3s ease-in-out; */
+  /* } */
 
   svg {
     position: absolute;
@@ -46,6 +63,11 @@ img {
 
     path {
       opacity: 0;
+      pointer-events: all;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     &.show path {
@@ -53,12 +75,7 @@ img {
     }
   }
 
-  path {
-    pointer-events: all;
-  }
-
   div {
-    transition: transform 0.3s ease-in-out;
     height: 100%;
     width: 100%;
   }

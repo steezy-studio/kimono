@@ -604,21 +604,228 @@ parcelHelpers.exportAll(_root, exports);
 },{"./app/root":"kFUPj","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"kFUPj":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _datGui = require("dat.gui");
 var _config = require("../consts/config");
 var _configDefault = parcelHelpers.interopDefault(_config);
-var _createElementFromString = require("../utils/createElementFromString");
-var _createElementFromStringDefault = parcelHelpers.interopDefault(_createElementFromString);
-var _isTouchDevice = require("../utils/isTouchDevice");
-var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
-var _lottie = require("./components/Lottie/Lottie");
-var _lottieDefault = parcelHelpers.interopDefault(_lottie);
+var _scene = require("./modules/Scene");
+var _sceneDefault = parcelHelpers.interopDefault(_scene);
 const config = (0, _configDefault.default);
-class Scene {
-    constructor(rootId){
-        this.rootEl = document.getElementById(rootId);
-        this.lottieItems = [];
-        this.sceneItems = [];
+new (0, _sceneDefault.default)("root");
+exports.default = (0, _sceneDefault.default);
+
+},{"../consts/config":"93LCw","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./modules/Scene":"iSB58"}],"93LCw":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+const config = {
+    data: [
+        {
+            __typename: "STATIC",
+            id: 0,
+            name: "background",
+            zIndex: 100,
+            paralaxAmount: 0,
+            folder: "00-background",
+            asset: {
+                src: "00-background.jpg",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 1,
+            name: "sun",
+            zIndex: 200,
+            paralaxAmount: 0.02,
+            folder: "01-sun",
+            asset: {
+                src: "01-sun.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 13,
+            name: "cloud-left",
+            zIndex: 1400,
+            paralaxAmount: 0.05,
+            folder: "13-cloud-left",
+            asset: {
+                src: "13-cloud-left.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 14,
+            name: "cloud-right",
+            zIndex: 1500,
+            paralaxAmount: 0.05,
+            folder: "14-cloud-right",
+            asset: {
+                src: "14-cloud_right.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "LOTTIE",
+            id: 2,
+            hideOnCompleted: false,
+            name: "crater",
+            zIndex: 300,
+            paralaxAmount: 0,
+            once: true,
+            folder: "02-crater"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 3,
+            hideOnCompleted: false,
+            name: "cloud-rain",
+            zIndex: 400,
+            paralaxAmount: 0.04,
+            once: true,
+            folder: "03-cloud-rain"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 4,
+            hideOnCompleted: false,
+            name: "box-right",
+            zIndex: 500,
+            paralaxAmount: 0.1,
+            once: false,
+            folder: "04-box-right"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 5,
+            hideOnCompleted: false,
+            name: "tree",
+            zIndex: 600,
+            paralaxAmount: 0.01,
+            once: false,
+            folder: "05-tree"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 6,
+            hideOnCompleted: true,
+            name: "bird-white",
+            zIndex: 700,
+            paralaxAmount: 0.2,
+            once: true,
+            folder: "06-bird-white"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 7,
+            hideOnCompleted: false,
+            name: "box-left",
+            zIndex: 800,
+            paralaxAmount: 0.2,
+            once: false,
+            folder: "07-box-left1"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 8,
+            hideOnCompleted: false,
+            name: "box-left2",
+            zIndex: 900,
+            paralaxAmount: 0.5,
+            once: false,
+            folder: "08-box-left2"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 9,
+            hideOnCompleted: false,
+            name: "cloud-center1",
+            zIndex: 1000,
+            paralaxAmount: 0.02,
+            once: false,
+            folder: "09-cloud-center1"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 10,
+            hideOnCompleted: false,
+            name: "cloud-center2",
+            zIndex: 1100,
+            paralaxAmount: 0.02,
+            once: false,
+            folder: "10-cloud-center2"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 11,
+            hideOnCompleted: false,
+            name: "flowers",
+            zIndex: 1200,
+            paralaxAmount: 0.03,
+            once: false,
+            folder: "11-flowers"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 12,
+            hideOnCompleted: true,
+            name: "bird-orange",
+            zIndex: 1300,
+            paralaxAmount: 0.4,
+            once: true,
+            folder: "12-bird-orange"
+        }
+    ]
+};
+exports.default = config;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"bFA7W":[function(require,module,exports,__globalThis) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"iSB58":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _isTouchDevice = require("../../../utils/isTouchDevice");
+var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
+var _baseScene = require("./BaseScene");
+var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
+const dat = require("bd4ad60a59029c2c");
+class Scene extends (0, _baseSceneDefault.default) {
+    constructor(appId){
+        super(appId);
+        this.animate();
+        this.isSunUp = false;
         this.paralaxDestination = {
             x: 0,
             y: 0
@@ -627,17 +834,68 @@ class Scene {
             x: 0,
             y: 0
         };
-        this.paralaxStrength = 100;
-        this.initStaticLayers();
-        this.initLottieLayers();
         this.attachParalax();
-        this.raf();
         this.addGUI();
     }
+    revealScene() {
+        this.sceneItems.forEach((item, i)=>{
+            setTimeout(()=>{
+                item.classList.add("show");
+            }, i * 150);
+        });
+    }
+    animate() {
+        let sunPosition = 0;
+        function paralax() {
+            const distX = this.paralaxDestination.x - this.paralaxPosition.x;
+            const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+            const step = 0.05;
+            this.paralaxPosition.x += distX * step;
+            this.paralaxPosition.y += distY * step;
+            this.sceneItems.forEach((item)=>{
+                const distance = Number(item.dataset.paralaxAmount);
+                const x = this.paralaxPosition.x * distance;
+                const y = this.paralaxPosition.y * distance;
+                item.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
+        function sunrise() {
+            const sun = document.querySelector('[data-name="sun"] img');
+            const sunTarget = this.loadedAssets / this.sceneItems.length;
+            const distance = sunTarget - sunPosition;
+            sunPosition += distance * 0.01;
+            sun.style.transform = `translateY(${70 * (1 - sunPosition)}%)`;
+            this.isSunUp = sunPosition >= 0.99;
+            if (this.isSunUp) this.revealScene();
+        }
+        function raf() {
+            if (this.isSunUp) paralax.bind(this)();
+            else sunrise.bind(this)();
+            window.requestAnimationFrame(raf.bind(this));
+        }
+        window.requestAnimationFrame(raf.bind(this));
+    }
+    attachParalax() {
+        if ((0, _isTouchDeviceDefault.default)()) return;
+        function handleMouseMove(e) {
+            const w = this.rootEl.clientWidth;
+            const h = this.rootEl.clientHeight;
+            const x = e.clientX;
+            const y = e.clientY;
+            const normX = (x - w / 2) / (w / 2);
+            const normY = (y - h / 2) / (h / 2);
+            this.paralaxDestination = {
+                x: normX,
+                y: normY
+            };
+        }
+        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
+    }
     addGUI() {
-        const gui = new _datGui.GUI({
+        const gui = new dat.GUI({
             name: "Settings"
         });
+        gui.close();
         const folder = gui.addFolder("paralaxAmount");
         folder.open();
         gui.add({
@@ -659,103 +917,20 @@ class Scene {
             });
         });
     }
-    raf() {
-        const distX = this.paralaxDestination.x - this.paralaxPosition.x;
-        const distY = this.paralaxDestination.y - this.paralaxPosition.y;
-        const step = 0.05;
-        this.paralaxPosition.x += distX * step;
-        this.paralaxPosition.y += distY * step;
-        this.sceneItems.forEach((item)=>{
-            const distance = Number(item.dataset.paralaxAmount);
-            const x = this.paralaxPosition.x * distance;
-            const y = this.paralaxPosition.y * distance;
-            item.style.transform = `translate(${x}px, ${y}px)`;
-        });
-        window.requestAnimationFrame(this.raf.bind(this));
-    }
-    attachParalax() {
-        if ((0, _isTouchDeviceDefault.default)()) return;
-        function handleMouseMove(e) {
-            const w = this.rootEl.clientWidth;
-            const h = this.rootEl.clientHeight;
-            const x = e.clientX;
-            const y = e.clientY;
-            const normX = (x - w / 2) / (w / 2);
-            const normY = (y - h / 2) / (h / 2);
-            this.paralaxDestination = {
-                x: normX,
-                y: normY
-            };
-        }
-        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
-    }
-    createLayer(el, config, classes) {
-        const layerEl = document.createElement("div");
-        layerEl.classList.add(...classes);
-        layerEl.setAttribute("data-name", config.name);
-        layerEl.setAttribute("data-paralax-amount", String(this.paralaxStrength * config.paralaxAmount));
-        this.sceneItems.push(layerEl);
-        layerEl.appendChild(el);
-        return layerEl;
-    }
-    initLottieLayers() {
-        config.data.forEach((layer)=>{
-            if (layer.__typename === "LOTTIE") {
-                const svgSrc = [
-                    ".",
-                    "assets",
-                    layer.folder,
-                    "object.svg"
-                ].join("/");
-                const lottie = new (0, _lottieDefault.default)({
-                    ...layer,
-                    appContainer: this.rootEl
-                });
-                const layerEl = this.createLayer(lottie.lottieContainer, layer, [
-                    "layer",
-                    "lottie"
-                ]);
-                (0, _createElementFromStringDefault.default)(svgSrc).then((svg)=>{
-                    layerEl.appendChild(svg);
-                    const path = svg.querySelector("g path");
-                    path?.addEventListener("click", ()=>{
-                        lottie.play();
-                    });
-                    path?.addEventListener("mouseenter", ()=>{
-                        layerEl.classList.add("hover");
-                    });
-                    path?.addEventListener("mouseleave", ()=>{
-                        layerEl.classList.remove("hover");
-                    });
-                });
-                this.rootEl.appendChild(layerEl);
-                this.lottieItems.push(lottie);
-            }
-        });
-    }
-    initStaticLayers() {
-        config.data.forEach((layer)=>{
-            if (layer.__typename === "STATIC") {
-                const img = new Image();
-                img.src = [
-                    ".",
-                    "assets",
-                    layer.folder,
-                    layer.asset.src
-                ].join("/");
-                const layerEl = this.createLayer(img, layer, [
-                    "layer",
-                    "static"
-                ]);
-                this.rootEl.appendChild(layerEl);
-            }
-        });
-    }
 }
-new Scene("root");
 exports.default = Scene;
 
-},{"dat.gui":"23Ud5","../consts/config":"93LCw","../utils/isTouchDevice":"3VOhl","./components/Lottie/Lottie":"3WKLq","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","../utils/createElementFromString":"32Xvb"}],"23Ud5":[function(require,module,exports,__globalThis) {
+},{"../../../utils/isTouchDevice":"3VOhl","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","bd4ad60a59029c2c":"23Ud5","./BaseScene":"aajsy"}],"3VOhl":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>isTouchDevice);
+"use client";
+function isTouchDevice() {
+    if (typeof window === "undefined") return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
 /**
  * dat-gui JavaScript Controller Library
  * https://github.com/dataarts/dat.gui
@@ -3046,218 +3221,121 @@ var index = {
 };
 exports.default = index;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"bFA7W":[function(require,module,exports,__globalThis) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"aajsy":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _config = require("../../../consts/config");
+var _configDefault = parcelHelpers.interopDefault(_config);
+var _createElementFromString = require("../../../utils/createElementFromString");
+var _createElementFromStringDefault = parcelHelpers.interopDefault(_createElementFromString);
+var _lottie = require("../Lottie/Lottie");
+var _lottieDefault = parcelHelpers.interopDefault(_lottie);
+const config = (0, _configDefault.default);
+class BaseScene {
+    constructor(rootId){
+        this.rootEl = document.getElementById(rootId);
+        this.lottieItems = [];
+        this.sceneItems = [];
+        this.loadedAssets = 0;
+        this.paralaxStrength = 100;
+        this.loadScene();
+    }
+    async loadScene() {
+        await this.initStaticLayers();
+        await this.initLottieLayers();
+    }
+    createLayer(el, config, classes) {
+        const layerEl = document.createElement("div");
+        layerEl.classList.add(...classes);
+        layerEl.setAttribute("data-name", config.name);
+        layerEl.setAttribute("data-paralax-amount", String(this.paralaxStrength * config.paralaxAmount));
+        this.sceneItems.push(layerEl);
+        layerEl.appendChild(el);
+        return layerEl;
+    }
+    async initLottieLayers() {
+        config.data.forEach((layer)=>{
+            if (layer.__typename === "LOTTIE") {
+                const svgSrc = [
+                    ".",
+                    "assets",
+                    layer.folder,
+                    "object.svg"
+                ].join("/");
+                const lottie = new (0, _lottieDefault.default)({
+                    ...layer,
+                    appContainer: this.rootEl
+                });
+                const layerEl = this.createLayer(lottie.lottieContainer, layer, [
+                    "layer",
+                    "lottie"
+                ]);
+                // add event map svg element
+                (0, _createElementFromStringDefault.default)(svgSrc).then((svg)=>{
+                    layerEl.appendChild(svg);
+                    const path = svg.querySelector("g path");
+                    path?.addEventListener("click", ()=>{
+                        lottie.play();
+                    });
+                });
+                this.rootEl.appendChild(layerEl);
+                this.lottieItems.push(lottie);
             }
         });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
+        const loadLotties = this.lottieItems.map((lottie)=>{
+            return new Promise((res)=>{
+                lottie.ref.addEventListener("loaded_images", (e)=>{
+                    this.loadedAssets++;
+                    res(e);
+                });
+            });
+        });
+        await Promise.all(loadLotties);
+    }
+    async initStaticLayers() {
+        let imgs = [];
+        config.data.forEach((layer)=>{
+            if (layer.__typename === "STATIC") {
+                const img = new Image();
+                img.src = [
+                    ".",
+                    "assets",
+                    layer.folder,
+                    layer.asset.src
+                ].join("/");
+                const layerEl = this.createLayer(img, layer, [
+                    "layer",
+                    "static"
+                ]);
+                this.rootEl.appendChild(layerEl);
+                imgs.push(img);
+            }
+        });
+        const loadImgs = imgs.map((img)=>{
+            return new Promise((res)=>{
+                img.onload = ()=>{
+                    this.loadedAssets++;
+                    res("");
+                };
+            });
+        });
+        await Promise.all(loadImgs);
+    }
+}
+exports.default = BaseScene;
 
-},{}],"93LCw":[function(require,module,exports,__globalThis) {
+},{"../../../consts/config":"93LCw","../../../utils/createElementFromString":"32Xvb","../Lottie/Lottie":"fb5Qr","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"32Xvb":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-const config = {
-    data: [
-        {
-            __typename: "STATIC",
-            id: 0,
-            name: "background",
-            zIndex: 100,
-            paralaxAmount: 0,
-            folder: "00-background",
-            asset: {
-                src: "00-background.jpg",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "STATIC",
-            id: 1,
-            name: "sun",
-            zIndex: 200,
-            paralaxAmount: 0.02,
-            folder: "01-sun",
-            asset: {
-                src: "01-sun.png",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "STATIC",
-            id: 13,
-            name: "cloud-left",
-            zIndex: 1400,
-            paralaxAmount: 0.05,
-            folder: "13-cloud-left",
-            asset: {
-                src: "13-cloud-left.png",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "STATIC",
-            id: 14,
-            name: "cloud-right",
-            zIndex: 1500,
-            paralaxAmount: 0.05,
-            folder: "14-cloud-right",
-            asset: {
-                src: "14-cloud_right.png",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "LOTTIE",
-            id: 2,
-            hideOnCompleted: false,
-            name: "crater",
-            zIndex: 300,
-            paralaxAmount: 0,
-            once: true,
-            folder: "02-crater"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 3,
-            hideOnCompleted: false,
-            name: "cloud-rain",
-            zIndex: 400,
-            paralaxAmount: 0.04,
-            once: true,
-            folder: "03-cloud-rain"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 4,
-            hideOnCompleted: false,
-            name: "box-right",
-            zIndex: 500,
-            paralaxAmount: 0.1,
-            once: false,
-            folder: "04-box-right"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 5,
-            hideOnCompleted: false,
-            name: "tree",
-            zIndex: 600,
-            paralaxAmount: 0.01,
-            once: false,
-            folder: "05-tree"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 6,
-            hideOnCompleted: true,
-            name: "bird-white",
-            zIndex: 700,
-            paralaxAmount: 0.2,
-            once: true,
-            folder: "06-bird-white"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 7,
-            hideOnCompleted: false,
-            name: "box-left",
-            zIndex: 800,
-            paralaxAmount: 0.2,
-            once: false,
-            folder: "07-box-left1"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 8,
-            hideOnCompleted: false,
-            name: "box-left2",
-            zIndex: 900,
-            paralaxAmount: 0.5,
-            once: false,
-            folder: "08-box-left2"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 9,
-            hideOnCompleted: false,
-            name: "cloud-center1",
-            zIndex: 1000,
-            paralaxAmount: 0.02,
-            once: false,
-            folder: "09-cloud-center1"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 10,
-            hideOnCompleted: false,
-            name: "cloud-center2",
-            zIndex: 1100,
-            paralaxAmount: 0.02,
-            once: false,
-            folder: "10-cloud-center2"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 11,
-            hideOnCompleted: false,
-            name: "flowers",
-            zIndex: 1200,
-            paralaxAmount: 0.03,
-            once: false,
-            folder: "11-flowers"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 12,
-            hideOnCompleted: true,
-            name: "bird-orange",
-            zIndex: 1300,
-            paralaxAmount: 0.4,
-            once: true,
-            folder: "12-bird-orange"
-        }
-    ]
-};
-exports.default = config;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>isTouchDevice);
-"use client";
-function isTouchDevice() {
-    if (typeof window === "undefined") return false;
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+parcelHelpers.export(exports, "default", ()=>createElementFromString);
+async function createElementFromString(path) {
+    const res = await fetch(path);
+    const text = await res.text();
+    const el = new DOMParser().parseFromString(text, "text/xml");
+    return el.firstChild;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3WKLq":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"fb5Qr":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _lottieWeb = require("lottie-web");
@@ -18561,17 +18639,6 @@ typeof navigator !== "undefined" && function(global, factory) {
     return lottie;
 });
 
-},{}],"32Xvb":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>createElementFromString);
-async function createElementFromString(path) {
-    const res = await fetch(path);
-    const text = await res.text();
-    const el = new DOMParser().parseFromString(text, "text/xml");
-    return el.firstChild;
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}]},["hW0B3","h7u1C"], "h7u1C", "parcelRequire94c2")
+},{}]},["hW0B3","h7u1C"], "h7u1C", "parcelRequire94c2")
 
 //# sourceMappingURL=index.b71e74eb.js.map

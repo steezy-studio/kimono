@@ -31,14 +31,16 @@ img {
 
 .layer {
   pointer-events: none;
+  opacity: 0;
   width: 100%;
   height: 100%;
+  transition: opacity .7s ease-in-out;
   position: absolute;
   inset: 0;
 }
 
-.layer.hover div {
-  transform: scale(1.015);
+.layer.show, .layer[data-name="sun"], .layer[data-name="background"] {
+  opacity: 1;
 }
 
 .layer svg {
@@ -50,20 +52,20 @@ img {
 
 .layer svg path {
   opacity: 0;
+  pointer-events: all;
+}
+
+.layer svg path:hover {
+  cursor: pointer;
 }
 
 .layer svg.show path {
   opacity: .5;
 }
 
-.layer path {
-  pointer-events: all;
-}
-
 .layer div {
   width: 100%;
   height: 100%;
-  transition: transform .3s ease-in-out;
 }
 
 .controls {
