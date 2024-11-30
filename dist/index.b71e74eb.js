@@ -604,333 +604,39 @@ parcelHelpers.exportAll(_root, exports);
 },{"./app/root":"kFUPj","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"kFUPj":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _config = require("../consts/config");
-var _configDefault = parcelHelpers.interopDefault(_config);
 var _scene = require("./modules/Scene");
 var _sceneDefault = parcelHelpers.interopDefault(_scene);
-const config = (0, _configDefault.default);
-new (0, _sceneDefault.default)("root");
+const dat = require("2dd0c2de9c45054f");
+new (0, _sceneDefault.default)("root").onReady = ()=>{
+    const gui = new dat.GUI({
+        name: "Settings"
+    });
+    gui.close();
+    const folder = gui.addFolder("paralaxAmount");
+    folder.open();
+    const layers = document.querySelectorAll(".layer");
+    gui.add({
+        "event-maps": false
+    }, "event-maps").onChange((val)=>{
+        const eventMaps = document.querySelectorAll(".layer svg");
+        eventMaps.forEach((obj)=>{
+            if (val) obj.classList.add("show");
+            else obj.classList.remove("show");
+        });
+    });
+    layers.forEach((el)=>{
+        const name = el.dataset.name;
+        const paralaxAmount = Number(el.dataset.paralaxAmount);
+        folder.add({
+            [name]: paralaxAmount
+        }, name, -1, 1).onChange((val)=>{
+            el.setAttribute("data-paralax-amount", val);
+        });
+    });
+};
 exports.default = (0, _sceneDefault.default);
 
-},{"../consts/config":"93LCw","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./modules/Scene":"iSB58"}],"93LCw":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-const config = {
-    data: [
-        {
-            __typename: "STATIC",
-            id: 0,
-            name: "background",
-            zIndex: 100,
-            paralaxAmount: 0,
-            folder: "00-background",
-            asset: {
-                src: "00-background.jpg",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "STATIC",
-            id: 1,
-            name: "sun",
-            zIndex: 200,
-            paralaxAmount: 0.02,
-            folder: "01-sun",
-            asset: {
-                src: "01-sun.png",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "STATIC",
-            id: 13,
-            name: "cloud-left",
-            zIndex: 1400,
-            paralaxAmount: 0.05,
-            folder: "13-cloud-left",
-            asset: {
-                src: "13-cloud-left.png",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "STATIC",
-            id: 14,
-            name: "cloud-right",
-            zIndex: 1500,
-            paralaxAmount: 0.05,
-            folder: "14-cloud-right",
-            asset: {
-                src: "14-cloud_right.png",
-                width: 1920,
-                height: 1080
-            }
-        },
-        {
-            __typename: "LOTTIE",
-            id: 2,
-            hideOnCompleted: false,
-            name: "crater",
-            zIndex: 300,
-            paralaxAmount: 0,
-            once: true,
-            folder: "02-crater"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 3,
-            hideOnCompleted: false,
-            name: "cloud-rain",
-            zIndex: 400,
-            paralaxAmount: 0.04,
-            once: true,
-            folder: "03-cloud-rain"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 4,
-            hideOnCompleted: false,
-            name: "box-right",
-            zIndex: 500,
-            paralaxAmount: 0.1,
-            once: false,
-            folder: "04-box-right"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 5,
-            hideOnCompleted: false,
-            name: "tree",
-            zIndex: 600,
-            paralaxAmount: 0.01,
-            once: false,
-            folder: "05-tree"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 6,
-            hideOnCompleted: true,
-            name: "bird-white",
-            zIndex: 700,
-            paralaxAmount: 0.2,
-            once: true,
-            folder: "06-bird-white"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 7,
-            hideOnCompleted: false,
-            name: "box-left",
-            zIndex: 800,
-            paralaxAmount: 0.2,
-            once: false,
-            folder: "07-box-left1"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 8,
-            hideOnCompleted: false,
-            name: "box-left2",
-            zIndex: 900,
-            paralaxAmount: 0.5,
-            once: false,
-            folder: "08-box-left2"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 9,
-            hideOnCompleted: false,
-            name: "cloud-center1",
-            zIndex: 1000,
-            paralaxAmount: 0.02,
-            once: false,
-            folder: "09-cloud-center1"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 10,
-            hideOnCompleted: false,
-            name: "cloud-center2",
-            zIndex: 1100,
-            paralaxAmount: 0.02,
-            once: false,
-            folder: "10-cloud-center2"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 11,
-            hideOnCompleted: false,
-            name: "flowers",
-            zIndex: 1200,
-            paralaxAmount: 0.03,
-            once: false,
-            folder: "11-flowers"
-        },
-        {
-            __typename: "LOTTIE",
-            id: 12,
-            hideOnCompleted: true,
-            name: "bird-orange",
-            zIndex: 1300,
-            paralaxAmount: 0.4,
-            once: true,
-            folder: "12-bird-orange"
-        }
-    ]
-};
-exports.default = config;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"bFA7W":[function(require,module,exports,__globalThis) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"iSB58":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _isTouchDevice = require("../../../utils/isTouchDevice");
-var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
-var _baseScene = require("./BaseScene");
-var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
-const dat = require("bd4ad60a59029c2c");
-class Scene extends (0, _baseSceneDefault.default) {
-    constructor(appId){
-        super(appId);
-        this.animate();
-        this.isSunUp = false;
-        this.paralaxDestination = {
-            x: 0,
-            y: 0
-        };
-        this.paralaxPosition = {
-            x: 0,
-            y: 0
-        };
-        this.attachParalax();
-        this.addGUI();
-    }
-    revealScene() {
-        this.sceneItems.forEach((item, i)=>{
-            setTimeout(()=>{
-                item.classList.add("show");
-            }, i * 150);
-        });
-    }
-    animate() {
-        let sunPosition = 0;
-        function paralax() {
-            const distX = this.paralaxDestination.x - this.paralaxPosition.x;
-            const distY = this.paralaxDestination.y - this.paralaxPosition.y;
-            const step = 0.05;
-            this.paralaxPosition.x += distX * step;
-            this.paralaxPosition.y += distY * step;
-            this.sceneItems.forEach((item)=>{
-                const distance = Number(item.dataset.paralaxAmount);
-                const x = this.paralaxPosition.x * distance;
-                const y = this.paralaxPosition.y * distance;
-                item.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        }
-        function sunrise() {
-            const sun = document.querySelector('[data-name="sun"] img');
-            const sunTarget = this.loadedAssets / this.sceneItems.length;
-            const distance = sunTarget - sunPosition;
-            sunPosition += distance * 0.01;
-            sun.style.transform = `translateY(${70 * (1 - sunPosition)}%)`;
-            this.isSunUp = sunPosition >= 0.99;
-            if (this.isSunUp) this.revealScene();
-        }
-        function raf() {
-            if (this.isSunUp) paralax.bind(this)();
-            else sunrise.bind(this)();
-            window.requestAnimationFrame(raf.bind(this));
-        }
-        window.requestAnimationFrame(raf.bind(this));
-    }
-    attachParalax() {
-        if ((0, _isTouchDeviceDefault.default)()) return;
-        function handleMouseMove(e) {
-            const w = this.rootEl.clientWidth;
-            const h = this.rootEl.clientHeight;
-            const x = e.clientX;
-            const y = e.clientY;
-            const normX = (x - w / 2) / (w / 2);
-            const normY = (y - h / 2) / (h / 2);
-            this.paralaxDestination = {
-                x: normX,
-                y: normY
-            };
-        }
-        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
-    }
-    addGUI() {
-        const gui = new dat.GUI({
-            name: "Settings"
-        });
-        gui.close();
-        const folder = gui.addFolder("paralaxAmount");
-        folder.open();
-        gui.add({
-            "event-maps": false
-        }, "event-maps").onChange((val)=>{
-            const eventMaps = document.querySelectorAll(".layer svg");
-            eventMaps.forEach((obj)=>{
-                if (val) obj.classList.add("show");
-                else obj.classList.remove("show");
-            });
-        });
-        this.sceneItems.forEach((el)=>{
-            const name = el.dataset.name;
-            const paralaxAmount = Number(el.dataset.paralaxAmount);
-            folder.add({
-                [name]: paralaxAmount
-            }, name, 0, this.paralaxStrength).onChange((val)=>{
-                el.setAttribute("data-paralax-amount", val);
-            });
-        });
-    }
-}
-exports.default = Scene;
-
-},{"../../../utils/isTouchDevice":"3VOhl","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","bd4ad60a59029c2c":"23Ud5","./BaseScene":"aajsy"}],"3VOhl":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>isTouchDevice);
-"use client";
-function isTouchDevice() {
-    if (typeof window === "undefined") return false;
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
+},{"2dd0c2de9c45054f":"23Ud5","./modules/Scene":"iSB58","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
 /**
  * dat-gui JavaScript Controller Library
  * https://github.com/dataarts/dat.gui
@@ -3221,6 +2927,133 @@ var index = {
 };
 exports.default = index;
 
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"bFA7W":[function(require,module,exports,__globalThis) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"iSB58":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _isTouchDevice = require("../../../utils/isTouchDevice");
+var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
+var _baseScene = require("./BaseScene");
+var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
+class Scene extends (0, _baseSceneDefault.default) {
+    constructor(appId, onReady){
+        super(appId);
+        this.paralaxDestination = {
+            x: 0,
+            y: 0
+        };
+        this.paralaxPosition = {
+            x: 0,
+            y: 0
+        };
+        this.isSunUp = false;
+        this.sunPosition = 0;
+        this.sunEl = this.sceneItems.find((item)=>item.dataset.name === "sun");
+        this.onReady = onReady;
+        this.animate();
+        this.attachParalax();
+    }
+    revealScene() {
+        const staggeredScene = this.sceneItems.map((item, i)=>{
+            return new Promise((res)=>{
+                setTimeout(()=>{
+                    item.classList.add("show");
+                    res("");
+                }, i * 300);
+            });
+        });
+        Promise.all(staggeredScene).then(this.onReady);
+    }
+    sunrise() {
+        const sunTarget = this.loadedAssets / this.sceneItems.length;
+        const distance = sunTarget - this.sunPosition;
+        const step = 0.01;
+        this.sunPosition += distance * step;
+        this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
+        this.isSunUp = this.sunPosition >= 0.99;
+        if (this.isSunUp) this.revealScene();
+    }
+    paralax() {
+        const distX = this.paralaxDestination.x - this.paralaxPosition.x;
+        const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+        const step = 0.05;
+        this.paralaxPosition.x += distX * step;
+        this.paralaxPosition.y += distY * step;
+        this.sceneItems.forEach((item)=>{
+            const paralaxAmount = Number(item.dataset.paralaxAmount);
+            const distance = paralaxAmount * 100;
+            const x = this.paralaxPosition.x * distance;
+            const y = this.paralaxPosition.y * distance;
+            // item.style.transform = `scale(${1 - distX * paralaxAmount * 0.1}) translate(${x}px, ${y}px)`;
+            item.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    }
+    animate() {
+        function raf() {
+            if (this.isSunUp) this.paralax();
+            else this.sunrise();
+            window.requestAnimationFrame(raf.bind(this));
+        }
+        window.requestAnimationFrame(raf.bind(this));
+    }
+    attachParalax() {
+        if ((0, _isTouchDeviceDefault.default)()) return;
+        function handleMouseMove(e) {
+            const w = this.rootEl.clientWidth;
+            const h = this.rootEl.clientHeight;
+            const x = e.clientX;
+            const y = e.clientY;
+            const normX = (x - w / 2) / (w / 2);
+            const normY = (y - h / 2) / (h / 2);
+            this.paralaxDestination = {
+                x: normX,
+                y: normY
+            };
+        }
+        this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
+    }
+}
+exports.default = Scene;
+
+},{"../../../utils/isTouchDevice":"3VOhl","./BaseScene":"aajsy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>isTouchDevice);
+"use client";
+function isTouchDevice() {
+    if (typeof window === "undefined") return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"aajsy":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -3237,7 +3070,6 @@ class BaseScene {
         this.lottieItems = [];
         this.sceneItems = [];
         this.loadedAssets = 0;
-        this.paralaxStrength = 100;
         this.loadScene();
     }
     async loadScene() {
@@ -3248,7 +3080,7 @@ class BaseScene {
         const layerEl = document.createElement("div");
         layerEl.classList.add(...classes);
         layerEl.setAttribute("data-name", config.name);
-        layerEl.setAttribute("data-paralax-amount", String(this.paralaxStrength * config.paralaxAmount));
+        layerEl.setAttribute("data-paralax-amount", String(config.paralaxAmount));
         this.sceneItems.push(layerEl);
         layerEl.appendChild(el);
         return layerEl;
@@ -3324,7 +3156,178 @@ class BaseScene {
 }
 exports.default = BaseScene;
 
-},{"../../../consts/config":"93LCw","../../../utils/createElementFromString":"32Xvb","../Lottie/Lottie":"fb5Qr","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"32Xvb":[function(require,module,exports,__globalThis) {
+},{"../../../consts/config":"93LCw","../../../utils/createElementFromString":"32Xvb","../Lottie/Lottie":"fb5Qr","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"93LCw":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+const config = {
+    data: [
+        {
+            __typename: "STATIC",
+            id: 0,
+            name: "background",
+            zIndex: 100,
+            paralaxAmount: 0,
+            folder: "00-background",
+            asset: {
+                src: "00-background.jpg",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 1,
+            name: "sun",
+            zIndex: 200,
+            paralaxAmount: 0.02,
+            folder: "01-sun",
+            asset: {
+                src: "01-sun.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 13,
+            name: "cloud-left",
+            zIndex: 1400,
+            paralaxAmount: 0.05,
+            folder: "13-cloud-left",
+            asset: {
+                src: "13-cloud-left.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "STATIC",
+            id: 14,
+            name: "cloud-right",
+            zIndex: 1500,
+            paralaxAmount: 0.05,
+            folder: "14-cloud-right",
+            asset: {
+                src: "14-cloud_right.png",
+                width: 1920,
+                height: 1080
+            }
+        },
+        {
+            __typename: "LOTTIE",
+            id: 2,
+            hideOnCompleted: false,
+            name: "crater",
+            zIndex: 300,
+            paralaxAmount: 0,
+            once: true,
+            folder: "02-crater"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 3,
+            hideOnCompleted: false,
+            name: "cloud-rain",
+            zIndex: 400,
+            paralaxAmount: 0.04,
+            once: true,
+            folder: "03-cloud-rain"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 4,
+            hideOnCompleted: false,
+            name: "box-right",
+            zIndex: 500,
+            paralaxAmount: 0.1,
+            once: false,
+            folder: "04-box-right"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 5,
+            hideOnCompleted: false,
+            name: "tree",
+            zIndex: 600,
+            paralaxAmount: 0.01,
+            once: false,
+            folder: "05-tree"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 6,
+            hideOnCompleted: true,
+            name: "bird-white",
+            zIndex: 700,
+            paralaxAmount: 0.2,
+            once: true,
+            folder: "06-bird-white"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 7,
+            hideOnCompleted: false,
+            name: "box-left",
+            zIndex: 800,
+            paralaxAmount: 0.2,
+            once: false,
+            folder: "07-box-left1"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 8,
+            hideOnCompleted: false,
+            name: "box-left2",
+            zIndex: 900,
+            paralaxAmount: 0.5,
+            once: false,
+            folder: "08-box-left2"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 9,
+            hideOnCompleted: false,
+            name: "cloud-center1",
+            zIndex: 1000,
+            paralaxAmount: 0.02,
+            once: false,
+            folder: "09-cloud-center1"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 10,
+            hideOnCompleted: false,
+            name: "cloud-center2",
+            zIndex: 1100,
+            paralaxAmount: 0.02,
+            once: false,
+            folder: "10-cloud-center2"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 11,
+            hideOnCompleted: false,
+            name: "flowers",
+            zIndex: 1200,
+            paralaxAmount: 0.03,
+            once: false,
+            folder: "11-flowers"
+        },
+        {
+            __typename: "LOTTIE",
+            id: 12,
+            hideOnCompleted: true,
+            name: "bird-orange",
+            zIndex: 1300,
+            paralaxAmount: 0.4,
+            once: true,
+            folder: "12-bird-orange"
+        }
+    ]
+};
+exports.default = config;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"32Xvb":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>createElementFromString);

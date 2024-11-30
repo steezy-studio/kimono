@@ -1,4 +1,3 @@
-import dat = require("dat.gui");
 import isTouchDevice from "../../../utils/isTouchDevice";
 import BaseScene from "./BaseScene";
 
@@ -6,60 +5,72 @@ class Scene extends BaseScene {
   paralaxDestination: { x: number; y: number };
   paralaxPosition: { x: number; y: number };
   isSunUp: boolean;
-  constructor(appId: string) {
+  sunPosition: number;
+  sunEl: HTMLElement;
+  onReady: () => void;
+
+  constructor(appId: string, onReady?: () => void) {
     super(appId);
-    this.animate();
-    this.isSunUp = false;
     this.paralaxDestination = { x: 0, y: 0 };
     this.paralaxPosition = { x: 0, y: 0 };
+    this.isSunUp = false;
+    this.sunPosition = 0;
+    this.sunEl = this.sceneItems.find((item) => item.dataset.name === "sun");
+    this.onReady = onReady;
+
+    this.animate();
     this.attachParalax();
-    this.addGUI();
   }
 
   revealScene() {
-    this.sceneItems.forEach((item, i) => {
-      setTimeout(() => {
-        item.classList.add("show");
-      }, i * 150);
+    const staggeredScene = this.sceneItems.map((item, i) => {
+      return new Promise((res) => {
+        setTimeout(() => {
+          item.classList.add("show");
+          res("");
+        }, i * 300);
+      });
+    });
+
+    Promise.all(staggeredScene).then(this.onReady);
+  }
+
+  sunrise() {
+    const sunTarget = this.loadedAssets / this.sceneItems.length;
+    const distance = sunTarget - this.sunPosition;
+    const step = 0.01;
+    this.sunPosition += distance * step;
+    this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
+    this.isSunUp = this.sunPosition >= 0.99;
+
+    if (this.isSunUp) {
+      this.revealScene();
+    }
+  }
+
+  paralax() {
+    const distX = this.paralaxDestination.x - this.paralaxPosition.x;
+    const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+    const step = 0.05;
+    this.paralaxPosition.x += distX * step;
+    this.paralaxPosition.y += distY * step;
+
+    this.sceneItems.forEach((item) => {
+      const paralaxAmount = Number(item.dataset.paralaxAmount);
+      const distance = paralaxAmount * 100;
+      const x = this.paralaxPosition.x * distance;
+      const y = this.paralaxPosition.y * distance;
+      // item.style.transform = `scale(${1 - distX * paralaxAmount * 0.1}) translate(${x}px, ${y}px)`;
+      item.style.transform = `translate(${x}px, ${y}px)`;
     });
   }
 
   animate() {
-    let sunPosition = 0;
-    function paralax() {
-      const distX = this.paralaxDestination.x - this.paralaxPosition.x;
-      const distY = this.paralaxDestination.y - this.paralaxPosition.y;
-      const step = 0.05;
-      this.paralaxPosition.x += distX * step;
-      this.paralaxPosition.y += distY * step;
-
-      this.sceneItems.forEach((item) => {
-        const distance = Number(item.dataset.paralaxAmount);
-        const x = this.paralaxPosition.x * distance;
-        const y = this.paralaxPosition.y * distance;
-        item.style.transform = `translate(${x}px, ${y}px)`;
-      });
-    }
-
-    function sunrise() {
-      const sun = document.querySelector(
-        '[data-name="sun"] img',
-      ) as HTMLImageElement;
-      const sunTarget = this.loadedAssets / this.sceneItems.length;
-      const distance = sunTarget - sunPosition;
-      sunPosition += distance * 0.01;
-      sun.style.transform = `translateY(${70 * (1 - sunPosition)}%)`;
-      this.isSunUp = sunPosition >= 0.99;
-      if (this.isSunUp) {
-        this.revealScene();
-      }
-    }
-
     function raf() {
       if (this.isSunUp) {
-        paralax.bind(this)();
+        this.paralax();
       } else {
-        sunrise.bind(this)();
+        this.sunrise();
       }
       window.requestAnimationFrame(raf.bind(this));
     }
@@ -79,34 +90,6 @@ class Scene extends BaseScene {
       this.paralaxDestination = { x: normX, y: normY };
     }
     this.rootEl.addEventListener("mousemove", handleMouseMove.bind(this));
-  }
-
-  addGUI() {
-    const gui = new dat.GUI({ name: "Settings" });
-    gui.close();
-    const folder = gui.addFolder("paralaxAmount");
-    folder.open();
-
-    gui.add({ "event-maps": false }, "event-maps").onChange((val) => {
-      const eventMaps = document.querySelectorAll(".layer svg");
-      eventMaps.forEach((obj) => {
-        if (val) {
-          obj.classList.add("show");
-        } else {
-          obj.classList.remove("show");
-        }
-      });
-    });
-
-    this.sceneItems.forEach((el) => {
-      const name = el.dataset.name!;
-      const paralaxAmount = Number(el.dataset.paralaxAmount);
-      folder
-        .add({ [name]: paralaxAmount }, name, 0, this.paralaxStrength)
-        .onChange((val) => {
-          el.setAttribute("data-paralax-amount", val);
-        });
-    });
   }
 }
 

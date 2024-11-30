@@ -8,14 +8,12 @@ class BaseScene {
   lottieItems: Lottie[];
   sceneItems: HTMLElement[];
   loadedAssets: number;
-  paralaxStrength: number;
 
   constructor(rootId: string) {
     this.rootEl = document.getElementById(rootId)!;
     this.lottieItems = [];
     this.sceneItems = [];
     this.loadedAssets = 0;
-    this.paralaxStrength = 100;
     this.loadScene();
   }
 
@@ -28,10 +26,7 @@ class BaseScene {
     const layerEl = document.createElement("div");
     layerEl.classList.add(...classes);
     layerEl.setAttribute("data-name", config.name);
-    layerEl.setAttribute(
-      "data-paralax-amount",
-      String(this.paralaxStrength * config.paralaxAmount),
-    );
+    layerEl.setAttribute("data-paralax-amount", String(config.paralaxAmount));
     this.sceneItems.push(layerEl);
     layerEl.appendChild(el);
     return layerEl;
