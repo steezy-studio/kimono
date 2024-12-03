@@ -604,25 +604,46 @@ parcelHelpers.exportAll(_root, exports);
 },{"./app/root":"kFUPj","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"kFUPj":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+var _paralaxInfo = require("./modules/ParalaxInfo/ParalaxInfo");
+var _paralaxInfoDefault = parcelHelpers.interopDefault(_paralaxInfo);
 var _scene = require("./modules/Scene");
 var _sceneDefault = parcelHelpers.interopDefault(_scene);
 const dat = require("2dd0c2de9c45054f");
-new (0, _sceneDefault.default)("root").onReady = ()=>{
+const scene = new (0, _sceneDefault.default)("root");
+scene.onReady = ()=>{
     const gui = new dat.GUI({
         name: "Settings"
     });
     gui.close();
     const folder = gui.addFolder("paralaxAmount");
     folder.open();
-    const layers = document.querySelectorAll(".layer");
+    // prettier-ignore
+    const layers = Array.from(document.querySelectorAll(".layer"));
+    const svgs = Array.from(document.querySelectorAll(".layer svg"));
+    const paths = Array.from(document.querySelectorAll(".layer svg path"));
+    let labels = [];
     gui.add({
-        "event-maps": false
-    }, "event-maps").onChange((val)=>{
-        const eventMaps = document.querySelectorAll(".layer svg");
-        eventMaps.forEach((obj)=>{
-            if (val) obj.classList.add("show");
-            else obj.classList.remove("show");
-        });
+        debug: false
+    }, "debug").onChange((debug)=>{
+        if (debug) {
+            paths.forEach((path, i)=>labels.push(new (0, _paralaxInfoDefault.default)(layers[i], path)));
+            svgs.forEach((svg)=>svg.classList.add("debug"));
+            window.requestAnimationFrame(raf);
+        } else {
+            labels.forEach((label)=>label.destroy());
+            svgs.forEach((svg)=>svg.classList.remove("debug"));
+            labels = [];
+        }
+        function raf() {
+            if (!debug) return;
+            labels.forEach((label)=>{
+                label.updatePosition();
+                const transform = label.container.style.transform;
+                const scale = /scale\((\d+(.\d+)?)\)/.exec(transform);
+                label.updateLabel(`scale ${scale?.[1]}`);
+            });
+            window.requestAnimationFrame(raf);
+        }
     });
     layers.forEach((el)=>{
         const name = el.dataset.name;
@@ -636,7 +657,7 @@ new (0, _sceneDefault.default)("root").onReady = ()=>{
 };
 exports.default = (0, _sceneDefault.default);
 
-},{"2dd0c2de9c45054f":"23Ud5","./modules/Scene":"iSB58","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
+},{"2dd0c2de9c45054f":"23Ud5","./modules/Scene":"iSB58","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./modules/ParalaxInfo/ParalaxInfo":"3URil"}],"23Ud5":[function(require,module,exports,__globalThis) {
 /**
  * dat-gui JavaScript Controller Library
  * https://github.com/dataarts/dat.gui
@@ -2960,11 +2981,18 @@ exports.export = function(dest, destName, get) {
 },{}],"iSB58":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+var _getElementCenter = require("../../../utils/getElementCenter");
+var _getElementCenterDefault = parcelHelpers.interopDefault(_getElementCenter);
 var _isTouchDevice = require("../../../utils/isTouchDevice");
 var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
 var _baseScene = require("./BaseScene");
 var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
-class Scene extends (0, _baseSceneDefault.default) {
+/*
+ * Flow:
+ * 1. this.animateSunrise() after imgs are laoded
+ * 2. this.revealScene() when lotties are ready (= sun is up)
+ * 3. this.animateParalax() for an eternity
+ * */ class Scene extends (0, _baseSceneDefault.default) {
     constructor(appId, onReady){
         super(appId);
         this.paralaxDestination = {
@@ -2977,56 +3005,88 @@ class Scene extends (0, _baseSceneDefault.default) {
         };
         this.isSunUp = false;
         this.sunPosition = 0;
-        this.sunEl = this.sceneItems.find((item)=>item.dataset.name === "sun");
+        this.sunEl = null;
+        this.vH = this.rootEl.clientHeight;
+        this.vW = this.rootEl.clientWidth;
+        this.attachListeners();
+        this.onMouseMove();
+        this.addEventListener("static_assets_loaded", ()=>{
+            this.animateSunRise();
+        });
         this.onReady = onReady;
-        this.animate();
-        this.attachParalax();
     }
-    revealScene() {
-        const staggeredScene = this.sceneItems.map((item, i)=>{
+    attachListeners() {
+        window.addEventListener("resize", ()=>{
+            this.vH = this.rootEl.clientHeight;
+            this.vW = this.rootEl.clientWidth;
+        });
+    }
+    async revealScene() {
+        const staggeredScene = this.loadedSceneItems.items.map((item, i)=>{
             return new Promise((res)=>{
                 setTimeout(()=>{
-                    item.classList.add("show");
+                    item.classList.add("reveal");
                     res("");
                 }, i * 150);
             });
         });
-        Promise.all(staggeredScene).then(this.onReady);
+        Promise.all(staggeredScene).then(()=>{
+            this.onReady();
+            this.animateParalax();
+        });
     }
     sunrise() {
-        const sunTarget = this.loadedAssets / this.sceneItems.length;
+        const sunTarget = this.sceneItemsCount.total / this.loadedSceneItems.items.length;
         const distance = sunTarget - this.sunPosition;
         const step = 0.01;
         this.sunPosition += distance * step;
-        this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
-        this.sunEl.style.transformOrigin = `50% 50%`;
+        const sunEl = this.loadedSceneItems.static.find((item)=>item.dataset.name === "sun");
+        // const sunPath = sunEl.querySelector("path");
+        // const { x, y } = getElementCenter(sunPath);
+        sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
         this.isSunUp = this.sunPosition >= 0.99;
         if (this.isSunUp) this.revealScene();
     }
     paralax() {
         const distX = this.paralaxDestination.x - this.paralaxPosition.x;
         const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+        const vWhalf = this.vW / 2;
         const step = 0.05;
         this.paralaxPosition.x += distX * step;
         this.paralaxPosition.y += distY * step;
-        this.sceneItems.forEach((item)=>{
+        this.loadedSceneItems.items.forEach((item)=>{
             const paralaxAmount = Number(item.dataset.paralaxAmount);
-            const distance = paralaxAmount * 100;
-            const x = this.paralaxPosition.x * distance;
-            const y = this.paralaxPosition.y * distance;
-            // item.style.transform = `scale(${1 - distX * paralaxAmount * 0.1}) translate(${x}px, ${y}px)`;
-            item.style.transform = `translate(${x}px, ${y}px)`;
+            const paralaxDistance = paralaxAmount * 100;
+            const path = item.querySelector("path");
+            const { x: pathX } = (0, _getElementCenterDefault.default)(path);
+            const paralaxPositionX = this.paralaxPosition.x * paralaxDistance;
+            const paralaxPositionY = this.paralaxPosition.y * paralaxDistance;
+            const pathCenterXNorm = (pathX - vWhalf) / vWhalf;
+            const scale = 1 - pathCenterXNorm * this.paralaxPosition.x * -0.2 * paralaxAmount;
+            item.style.transform = `
+        rotateY(${this.paralaxPosition.x * 2}deg)
+        rotateX(${-1 * this.paralaxPosition.y * 2}deg)
+        scale(${scale})
+        translate(${paralaxPositionX}px, ${paralaxPositionY}px)
+      `;
         });
     }
-    animate() {
+    animateParalax() {
         function raf() {
-            if (this.isSunUp) this.paralax();
-            else this.sunrise();
+            this.paralax();
             window.requestAnimationFrame(raf.bind(this));
         }
         window.requestAnimationFrame(raf.bind(this));
     }
-    attachParalax() {
+    animateSunRise() {
+        function raf() {
+            this.sunrise();
+            if (this.isSunUp) return;
+            window.requestAnimationFrame(raf.bind(this));
+        }
+        window.requestAnimationFrame(raf.bind(this));
+    }
+    onMouseMove() {
         if ((0, _isTouchDeviceDefault.default)()) return;
         function handleMouseMove(e) {
             const w = this.rootEl.clientWidth;
@@ -3045,7 +3105,21 @@ class Scene extends (0, _baseSceneDefault.default) {
 }
 exports.default = Scene;
 
-},{"../../../utils/isTouchDevice":"3VOhl","./BaseScene":"aajsy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
+},{"../../../utils/getElementCenter":"c7Iu3","../../../utils/isTouchDevice":"3VOhl","./BaseScene":"aajsy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"c7Iu3":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>getElementCenter);
+function getElementCenter(el) {
+    const bb = el.getBoundingClientRect();
+    const pathCenterX = bb.left + bb.width / 2;
+    const pathCenterY = bb.top + bb.height / 2;
+    return {
+        x: pathCenterX,
+        y: pathCenterY
+    };
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>isTouchDevice);
@@ -3065,94 +3139,98 @@ var _createElementFromStringDefault = parcelHelpers.interopDefault(_createElemen
 var _lottie = require("../Lottie/Lottie");
 var _lottieDefault = parcelHelpers.interopDefault(_lottie);
 const config = (0, _configDefault.default);
-class BaseScene {
+const resizeLottie = new CustomEvent("resize_lottie");
+class BaseScene extends EventTarget {
     constructor(rootId){
+        super();
         this.rootEl = document.getElementById(rootId);
-        this.lottieItems = [];
-        this.sceneItems = [];
-        this.loadedAssets = 0;
-        this.loadScene();
+        this.loadedSceneItems = {
+            static: [],
+            lottie: [],
+            items: []
+        };
+        const staticItemsCount = config.data.filter((i)=>i.__typename === "STATIC").length;
+        const totalItemsCount = config.data.length;
+        this.sceneItemsCount = {
+            static: staticItemsCount,
+            lottie: totalItemsCount - staticItemsCount,
+            total: totalItemsCount
+        };
+        this.createLayers();
     }
-    async loadScene() {
-        await this.initStaticLayers();
-        await this.initLottieLayers();
+    onStaticAssetsLoaded() {
+        const event = new Event("static_assets_loaded");
+        this.dispatchEvent(event);
     }
-    createLayer(el, config, classes) {
-        const layerEl = document.createElement("div");
-        layerEl.classList.add(...classes);
-        layerEl.setAttribute("data-name", config.name);
-        layerEl.setAttribute("data-paralax-amount", String(config.paralaxAmount));
-        this.sceneItems.push(layerEl);
-        layerEl.appendChild(el);
-        return layerEl;
+    onLottieAssetsLoaded() {
+        const event = new Event("lottie_assets_loaded");
+        this.dispatchEvent(event);
     }
-    async initLottieLayers() {
-        config.data.forEach((layer)=>{
-            if (layer.__typename === "LOTTIE") {
-                const svgSrc = [
-                    ".",
-                    "assets",
-                    layer.folder,
-                    "object.svg"
-                ].join("/");
-                const lottie = new (0, _lottieDefault.default)({
-                    ...layer,
-                    appContainer: this.rootEl
-                });
-                const layerEl = this.createLayer(lottie.lottieContainer, layer, [
-                    "layer",
-                    "lottie"
-                ]);
-                // add event map svg element
-                (0, _createElementFromStringDefault.default)(svgSrc).then((svg)=>{
-                    layerEl.appendChild(svg);
-                    const path = svg.querySelector("g path");
-                    path?.addEventListener("click", ()=>{
-                        lottie.play();
-                    });
-                });
-                this.rootEl.appendChild(layerEl);
-                this.lottieItems.push(lottie);
-            }
-        });
-        const loadLotties = this.lottieItems.map((lottie)=>{
-            return new Promise((res)=>{
-                lottie.ref.addEventListener("loaded_images", (e)=>{
-                    this.loadedAssets++;
-                    res(e);
-                });
+    registerLoadedAsset(item, config) {
+        const type = config.__typename === "LOTTIE" ? "lottie" : "static";
+        this.loadedSceneItems[type].push(item);
+        this.loadedSceneItems["items"].push(item);
+        if (type === "static" && this.loadedSceneItems.static.length === this.sceneItemsCount.static) {
+            this.loadedSceneItems.static.forEach((el)=>this.rootEl.appendChild(el));
+            this.onStaticAssetsLoaded();
+        }
+        if (type === "lottie" && this.loadedSceneItems.lottie.length === this.sceneItemsCount.lottie) {
+            this.loadedSceneItems.lottie.forEach((el)=>{
+                this.rootEl.appendChild(el);
+                el.dispatchEvent(resizeLottie);
             });
-        });
-        await Promise.all(loadLotties);
+            this.onLottieAssetsLoaded();
+        }
     }
-    async initStaticLayers() {
-        let imgs = [];
-        config.data.forEach((layer)=>{
-            if (layer.__typename === "STATIC") {
-                const img = new Image();
-                img.src = [
-                    ".",
-                    "assets",
-                    layer.folder,
-                    layer.asset.src
-                ].join("/");
-                const layerEl = this.createLayer(img, layer, [
-                    "layer",
-                    "static"
-                ]);
-                this.rootEl.appendChild(layerEl);
-                imgs.push(img);
-            }
+    async createContainer(layer) {
+        const type = layer.__typename === "LOTTIE" ? "lottie" : "static";
+        const container = document.createElement("div");
+        container.classList.add("layer", type);
+        container.setAttribute("data-name", layer.name);
+        container.setAttribute("data-paralax-amount", String(layer.paralaxAmount));
+        const eventMapSrc = [
+            ".",
+            "assets",
+            layer.folder,
+            "object.svg"
+        ].join("/");
+        const eventMap = await (0, _createElementFromStringDefault.default)(eventMapSrc);
+        container.appendChild(eventMap);
+        return container;
+    }
+    async createLayers() {
+        for (const layer of config.data){
+            if (layer.__typename === "STATIC") await this.createStaticLayer(layer);
+            if (layer.__typename === "LOTTIE") await this.createLottieLayer(layer);
+        }
+    }
+    async createStaticLayer(layer) {
+        const container = await this.createContainer(layer);
+        const image = new Image();
+        image.src = [
+            ".",
+            "assets",
+            layer.folder,
+            layer.asset.src
+        ].join("/");
+        container.appendChild(image);
+        image.onload = ()=>this.registerLoadedAsset(container, layer);
+    }
+    async createLottieLayer(layer) {
+        const container = await this.createContainer(layer);
+        const lottie = new (0, _lottieDefault.default)({
+            ...layer,
+            appContainer: this.rootEl,
+            lottieContainer: container
         });
-        const loadImgs = imgs.map((img)=>{
-            return new Promise((res)=>{
-                img.onload = ()=>{
-                    this.loadedAssets++;
-                    res("");
-                };
-            });
+        const path = container.querySelector("path");
+        path.addEventListener("click", ()=>{
+            lottie.play();
         });
-        await Promise.all(loadImgs);
+        container.addEventListener("resize_lottie", ()=>{
+            lottie.ref.resize();
+        });
+        lottie.ref.addEventListener("loaded_images", ()=>this.registerLoadedAsset(container, layer));
     }
 }
 exports.default = BaseScene;
@@ -3349,10 +3427,10 @@ class LottiePlayer {
         this.config = props;
         this.appContainer = props.appContainer;
         this.ref = null;
+        this.lottieContainer = props.lottieContainer;
         this.initLottie();
     }
     initLottie() {
-        this.lottieContainer = document.createElement("div");
         this.ref = (0, _lottieWebDefault.default).loadAnimation({
             container: this.lottieContainer,
             path: [
@@ -18643,6 +18721,45 @@ typeof navigator !== "undefined" && function(global, factory) {
     return lottie;
 });
 
-},{}]},["hW0B3","h7u1C"], "h7u1C", "parcelRequire94c2")
+},{}],"3URil":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _getElementCenter = require("../../../utils/getElementCenter");
+var _getElementCenterDefault = parcelHelpers.interopDefault(_getElementCenter);
+class ParalaxInfo {
+    constructor(container, target){
+        const label = document.createElement("span");
+        label.classList.add("paralax-info");
+        this.target = target;
+        this.element = label;
+        this.container = container;
+        this.hasPosition = false;
+        this.container.appendChild(label);
+        this.onResize();
+        this.updatePosition();
+    }
+    onResize() {
+        window.addEventListener("resize", this.updatePosition);
+    }
+    destroy() {
+        window.removeEventListener("resize", this.updatePosition);
+        this.element.remove();
+        console.log("remove");
+    }
+    updatePosition() {
+        const { x, y } = (0, _getElementCenterDefault.default)(this.target);
+        this.element.style.cssText = `
+      top: ${y}px;
+      left: ${x}px;
+    `;
+        this.hasPosition = true;
+    }
+    updateLabel(value) {
+        this.element.innerText = value;
+    }
+}
+exports.default = ParalaxInfo;
+
+},{"../../../utils/getElementCenter":"c7Iu3","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}]},["hW0B3","h7u1C"], "h7u1C", "parcelRequire94c2")
 
 //# sourceMappingURL=index.b71e74eb.js.map

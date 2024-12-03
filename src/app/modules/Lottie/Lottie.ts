@@ -6,23 +6,24 @@ import {
 
 interface LottiePlayerProps extends LottieLayerConfig {
   appContainer: HTMLElement;
+  lottieContainer: HTMLElement;
 }
 
 class LottiePlayer {
   appContainer: HTMLElement;
-  lottieContainer: HTMLElement;
   ref: AnimationItem;
   config: LottieLayer;
+  lottieContainer: HTMLElement;
 
   constructor(props: LottiePlayerProps) {
     this.config = props;
     this.appContainer = props.appContainer;
     this.ref = null!;
+    this.lottieContainer = props.lottieContainer;
     this.initLottie();
   }
 
   private initLottie() {
-    this.lottieContainer = document.createElement("div");
     this.ref = lottie.loadAnimation({
       container: this.lottieContainer,
       path: [".", "assets", this.config.folder, "data.json"].join("/"),

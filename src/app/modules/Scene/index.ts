@@ -1,7 +1,16 @@
+import getElementCenter from "../../../utils/getElementCenter";
 import isTouchDevice from "../../../utils/isTouchDevice";
 import BaseScene from "./BaseScene";
+/*
+ * Flow:
+ * 1. this.animateSunrise() after imgs are laoded
+ * 2. this.revealScene() when lotties are ready (= sun is up)
+ * 3. this.animateParalax() for an eternity
+ * */
 
 class Scene extends BaseScene {
+  vW: number;
+  vH: number;
   paralaxDestination: { x: number; y: number };
   paralaxPosition: { x: number; y: number };
   isSunUp: boolean;
@@ -15,33 +24,53 @@ class Scene extends BaseScene {
     this.paralaxPosition = { x: 0, y: 0 };
     this.isSunUp = false;
     this.sunPosition = 0;
-    this.sunEl = this.sceneItems.find((item) => item.dataset.name === "sun");
+    this.sunEl = null;
+    this.vH = this.rootEl.clientHeight;
+    this.vW = this.rootEl.clientWidth;
+    this.attachListeners();
+    this.onMouseMove();
+    this.addEventListener("static_assets_loaded", () => {
+      this.animateSunRise();
+    });
     this.onReady = onReady;
-
-    this.animate();
-    this.attachParalax();
   }
 
-  revealScene() {
-    const staggeredScene = this.sceneItems.map((item, i) => {
+  attachListeners() {
+    window.addEventListener("resize", () => {
+      this.vH = this.rootEl.clientHeight;
+      this.vW = this.rootEl.clientWidth;
+    });
+  }
+
+  async revealScene() {
+    const staggeredScene = this.loadedSceneItems.items.map((item, i) => {
       return new Promise((res) => {
         setTimeout(() => {
-          item.classList.add("show");
+          item.classList.add("reveal");
           res("");
         }, i * 150);
       });
     });
 
-    Promise.all(staggeredScene).then(this.onReady);
+    Promise.all(staggeredScene).then(() => {
+      this.onReady();
+      this.animateParalax();
+    });
   }
 
   sunrise() {
-    const sunTarget = this.loadedAssets / this.sceneItems.length;
+    const sunTarget =
+      this.sceneItemsCount.total / this.loadedSceneItems.items.length;
     const distance = sunTarget - this.sunPosition;
     const step = 0.01;
     this.sunPosition += distance * step;
-    this.sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
-    this.sunEl.style.transformOrigin = `50% 50%`;
+    const sunEl = this.loadedSceneItems.static.find(
+      (item) => item.dataset.name === "sun",
+    );
+    // const sunPath = sunEl.querySelector("path");
+    // const { x, y } = getElementCenter(sunPath);
+
+    sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
     this.isSunUp = this.sunPosition >= 0.99;
 
     if (this.isSunUp) {
@@ -52,34 +81,50 @@ class Scene extends BaseScene {
   paralax() {
     const distX = this.paralaxDestination.x - this.paralaxPosition.x;
     const distY = this.paralaxDestination.y - this.paralaxPosition.y;
+    const vWhalf = this.vW / 2;
     const step = 0.05;
     this.paralaxPosition.x += distX * step;
     this.paralaxPosition.y += distY * step;
 
-    this.sceneItems.forEach((item) => {
+    this.loadedSceneItems.items.forEach((item) => {
       const paralaxAmount = Number(item.dataset.paralaxAmount);
-      const distance = paralaxAmount * 100;
-      const x = this.paralaxPosition.x * distance;
-      const y = this.paralaxPosition.y * distance;
-      // item.style.transform = `scale(${1 - distX * paralaxAmount * 0.1}) translate(${x}px, ${y}px)`;
-      item.style.transform = `translate(${x}px, ${y}px)`;
+      const paralaxDistance = paralaxAmount * 100;
+
+      const path = item.querySelector("path");
+      const { x: pathX } = getElementCenter(path);
+      const paralaxPositionX = this.paralaxPosition.x * paralaxDistance;
+      const paralaxPositionY = this.paralaxPosition.y * paralaxDistance;
+      const pathCenterXNorm = (pathX - vWhalf) / vWhalf;
+      const scale =
+        1 - pathCenterXNorm * this.paralaxPosition.x * 0.2 * -1 * paralaxAmount;
+
+      item.style.transform = `
+        rotateY(${this.paralaxPosition.x * 2}deg)
+        rotateX(${-1 * this.paralaxPosition.y * 2}deg)
+        scale(${scale})
+        translate(${paralaxPositionX}px, ${paralaxPositionY}px)
+      `;
     });
   }
 
-  animate() {
+  animateParalax() {
     function raf() {
-      if (this.isSunUp) {
-        this.paralax();
-      } else {
-        this.sunrise();
-      }
+      this.paralax();
       window.requestAnimationFrame(raf.bind(this));
     }
-
     window.requestAnimationFrame(raf.bind(this));
   }
 
-  attachParalax() {
+  animateSunRise() {
+    function raf() {
+      this.sunrise();
+      if (this.isSunUp) return;
+      window.requestAnimationFrame(raf.bind(this));
+    }
+    window.requestAnimationFrame(raf.bind(this));
+  }
+
+  onMouseMove() {
     if (isTouchDevice()) return;
     function handleMouseMove(e: MouseEvent) {
       const w = this.rootEl.clientWidth;
