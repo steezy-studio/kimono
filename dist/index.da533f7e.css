@@ -26,6 +26,8 @@ img {
 .root {
   aspect-ratio: 16 / 9;
   perspective: 1000px;
+  -webkit-user-select: none;
+  user-select: none;
   height: 100%;
   position: relative;
   transform: scale(1.06);
@@ -41,7 +43,15 @@ img {
   inset: 0;
 }
 
-.layer.reveal, .layer[data-name="sun"], .layer[data-name="background"] {
+.layer.reveal {
+  opacity: 1;
+}
+
+.layer.hidden {
+  opacity: 0;
+}
+
+.layer[data-name="sun"], .layer[data-name="background"] {
   opacity: 1;
 }
 

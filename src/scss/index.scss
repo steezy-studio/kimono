@@ -27,6 +27,7 @@ img {
   position: relative;
   perspective: 1000px;
   transform: scale(1.06);
+  user-select: none;
 }
 
 .layer {
@@ -40,6 +41,10 @@ img {
 
   &.reveal {
     opacity: 1;
+  }
+
+  &.hidden {
+    opacity: 0;
   }
 
   &[data-name="sun"],

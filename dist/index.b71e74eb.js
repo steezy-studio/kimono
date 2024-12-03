@@ -621,6 +621,11 @@ scene.onReady = ()=>{
     const layers = Array.from(document.querySelectorAll(".layer"));
     const svgs = Array.from(document.querySelectorAll(".layer svg"));
     const paths = Array.from(document.querySelectorAll(".layer svg path"));
+    console.log({
+        layers,
+        svgs,
+        paths
+    });
     let labels = [];
     gui.add({
         debug: false
@@ -657,7 +662,7 @@ scene.onReady = ()=>{
 };
 exports.default = (0, _sceneDefault.default);
 
-},{"2dd0c2de9c45054f":"23Ud5","./modules/Scene":"iSB58","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W","./modules/ParalaxInfo/ParalaxInfo":"3URil"}],"23Ud5":[function(require,module,exports,__globalThis) {
+},{"2dd0c2de9c45054f":"23Ud5","./modules/ParalaxInfo/ParalaxInfo":"3URil","./modules/Scene":"iSB58","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"23Ud5":[function(require,module,exports,__globalThis) {
 /**
  * dat-gui JavaScript Controller Library
  * https://github.com/dataarts/dat.gui
@@ -2978,7 +2983,63 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"iSB58":[function(require,module,exports,__globalThis) {
+},{}],"3URil":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _getElementCenter = require("../../../utils/getElementCenter");
+var _getElementCenterDefault = parcelHelpers.interopDefault(_getElementCenter);
+class ParalaxInfo {
+    constructor(container, target){
+        const label = document.createElement("span");
+        label.classList.add("paralax-info");
+        this.target = target;
+        this.element = label;
+        this.container = container;
+        this.hasPosition = false;
+        this.container.appendChild(label);
+        this.onResize();
+        this.updatePosition();
+    }
+    onResize() {
+        window.addEventListener("resize", this.updatePosition);
+    }
+    destroy() {
+        window.removeEventListener("resize", this.updatePosition);
+        this.element.remove();
+    }
+    updatePosition() {
+        const { x, y } = (0, _getElementCenterDefault.default)(this.target);
+        this.element.style.cssText = `
+      top: ${y}px;
+      left: ${x}px;
+    `;
+        this.hasPosition = true;
+    }
+    updateLabel(value) {
+        this.element.innerText = value;
+    }
+}
+exports.default = ParalaxInfo;
+
+},{"../../../utils/getElementCenter":"c7Iu3","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"c7Iu3":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>getElementCenter);
+function getElementCenter(el) {
+    if (!el) return {
+        x: 0,
+        y: 0
+    };
+    const bb = el.getBoundingClientRect();
+    const pathCenterX = bb.left + bb.width / 2;
+    const pathCenterY = bb.top + bb.height / 2;
+    return {
+        x: pathCenterX,
+        y: pathCenterY
+    };
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"iSB58":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _getElementCenter = require("../../../utils/getElementCenter");
@@ -2988,10 +3049,12 @@ var _isTouchDeviceDefault = parcelHelpers.interopDefault(_isTouchDevice);
 var _baseScene = require("./BaseScene");
 var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
 /*
+ *
  * Flow:
  * 1. this.animateSunrise() after imgs are laoded
  * 2. this.revealScene() when lotties are ready (= sun is up)
  * 3. this.animateParalax() for an eternity
+ *
  * */ class Scene extends (0, _baseSceneDefault.default) {
     constructor(appId, onReady){
         super(appId);
@@ -3009,9 +3072,21 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
         this.vH = this.rootEl.clientHeight;
         this.vW = this.rootEl.clientWidth;
         this.attachListeners();
+        this.lottiePlaying = [];
         this.onMouseMove();
         this.addEventListener("static_assets_loaded", ()=>{
             this.animateSunRise();
+        });
+        this.addEventListener("lottie_assets_loaded", ()=>{
+            this.loadedSceneItems.lottie.forEach((lottie)=>{
+                lottie.addEventListener("lottie_playing", ()=>{
+                    this.lottiePlaying.push(lottie.dataset.name);
+                });
+                lottie.addEventListener("lottie_completed", ()=>{
+                    const listWithoutCurrent = this.lottiePlaying.filter((l)=>l !== lottie.dataset.name);
+                    this.lottiePlaying = listWithoutCurrent;
+                });
+            });
         });
         this.onReady = onReady;
     }
@@ -3041,10 +3116,9 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
         const step = 0.01;
         this.sunPosition += distance * step;
         const sunEl = this.loadedSceneItems.static.find((item)=>item.dataset.name === "sun");
-        // const sunPath = sunEl.querySelector("path");
-        // const { x, y } = getElementCenter(sunPath);
-        sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
-        this.isSunUp = this.sunPosition >= 0.99;
+        sunEl.style.transformOrigin = `50% ${60 * (1 - this.sunPosition) + 54.4}%`;
+        sunEl.style.transform = `rotate(${360 * this.sunPosition}deg) translateY(${60 * (1 - this.sunPosition)}%)`;
+        this.isSunUp = this.sunPosition >= 0.999;
         if (this.isSunUp) this.revealScene();
     }
     paralax() {
@@ -3073,7 +3147,7 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
     }
     animateParalax() {
         function raf() {
-            this.paralax();
+            if (this.lottiePlaying.length === 0) this.paralax();
             window.requestAnimationFrame(raf.bind(this));
         }
         window.requestAnimationFrame(raf.bind(this));
@@ -3105,21 +3179,7 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
 }
 exports.default = Scene;
 
-},{"../../../utils/getElementCenter":"c7Iu3","../../../utils/isTouchDevice":"3VOhl","./BaseScene":"aajsy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"c7Iu3":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>getElementCenter);
-function getElementCenter(el) {
-    const bb = el.getBoundingClientRect();
-    const pathCenterX = bb.left + bb.width / 2;
-    const pathCenterY = bb.top + bb.height / 2;
-    return {
-        x: pathCenterX,
-        y: pathCenterY
-    };
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
+},{"../../../utils/getElementCenter":"c7Iu3","../../../utils/isTouchDevice":"3VOhl","./BaseScene":"aajsy","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}],"3VOhl":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>isTouchDevice);
@@ -3444,13 +3504,15 @@ class LottiePlayer {
             renderer: "canvas"
         });
         this.ref.addEventListener("complete", ()=>{
-            if (this.config.hideOnCompleted) this.ref.destroy();
+            this.lottieContainer.dispatchEvent(new CustomEvent("lottie_completed"));
+            if (this.config.hideOnCompleted) this.lottieContainer.classList.add("hidden");
             if (this.config.once) return;
             this.ref.goToAndStop(0);
         });
     }
     play() {
         if (!this.ref.isPaused) return;
+        this.lottieContainer.dispatchEvent(new CustomEvent("lottie_playing"));
         this.ref.play();
     }
 }
@@ -18721,45 +18783,6 @@ typeof navigator !== "undefined" && function(global, factory) {
     return lottie;
 });
 
-},{}],"3URil":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _getElementCenter = require("../../../utils/getElementCenter");
-var _getElementCenterDefault = parcelHelpers.interopDefault(_getElementCenter);
-class ParalaxInfo {
-    constructor(container, target){
-        const label = document.createElement("span");
-        label.classList.add("paralax-info");
-        this.target = target;
-        this.element = label;
-        this.container = container;
-        this.hasPosition = false;
-        this.container.appendChild(label);
-        this.onResize();
-        this.updatePosition();
-    }
-    onResize() {
-        window.addEventListener("resize", this.updatePosition);
-    }
-    destroy() {
-        window.removeEventListener("resize", this.updatePosition);
-        this.element.remove();
-        console.log("remove");
-    }
-    updatePosition() {
-        const { x, y } = (0, _getElementCenterDefault.default)(this.target);
-        this.element.style.cssText = `
-      top: ${y}px;
-      left: ${x}px;
-    `;
-        this.hasPosition = true;
-    }
-    updateLabel(value) {
-        this.element.innerText = value;
-    }
-}
-exports.default = ParalaxInfo;
-
-},{"../../../utils/getElementCenter":"c7Iu3","@parcel/transformer-js/src/esmodule-helpers.js":"bFA7W"}]},["hW0B3","h7u1C"], "h7u1C", "parcelRequire94c2")
+},{}]},["hW0B3","h7u1C"], "h7u1C", "parcelRequire94c2")
 
 //# sourceMappingURL=index.b71e74eb.js.map

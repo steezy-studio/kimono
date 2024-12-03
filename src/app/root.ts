@@ -12,6 +12,7 @@ scene.onReady = () => {
   const layers = Array.from(document.querySelectorAll(".layer")) as HTMLElement[];
   const svgs = Array.from(document.querySelectorAll(".layer svg"));
   const paths = Array.from(document.querySelectorAll(".layer svg path"));
+  console.log({ layers, svgs, paths });
 
   let labels: ParalaxInfo[] = [];
 

@@ -33,7 +33,10 @@ class LottiePlayer {
     });
 
     this.ref.addEventListener("complete", () => {
-      if (this.config.hideOnCompleted) this.ref.destroy();
+      this.lottieContainer.dispatchEvent(new CustomEvent("lottie_completed"));
+      if (this.config.hideOnCompleted) {
+        this.lottieContainer.classList.add("hidden");
+      }
       if (this.config.once) return;
       this.ref.goToAndStop(0);
     });
@@ -41,6 +44,7 @@ class LottiePlayer {
 
   play() {
     if (!this.ref.isPaused) return;
+    this.lottieContainer.dispatchEvent(new CustomEvent("lottie_playing"));
     this.ref.play();
   }
 }

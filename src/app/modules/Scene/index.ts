@@ -2,10 +2,12 @@ import getElementCenter from "../../../utils/getElementCenter";
 import isTouchDevice from "../../../utils/isTouchDevice";
 import BaseScene from "./BaseScene";
 /*
+ *
  * Flow:
  * 1. this.animateSunrise() after imgs are laoded
  * 2. this.revealScene() when lotties are ready (= sun is up)
  * 3. this.animateParalax() for an eternity
+ *
  * */
 
 class Scene extends BaseScene {
@@ -17,6 +19,7 @@ class Scene extends BaseScene {
   sunPosition: number;
   sunEl: HTMLElement;
   onReady: () => void;
+  lottiePlaying: string[];
 
   constructor(appId: string, onReady?: () => void) {
     super(appId);
@@ -28,10 +31,27 @@ class Scene extends BaseScene {
     this.vH = this.rootEl.clientHeight;
     this.vW = this.rootEl.clientWidth;
     this.attachListeners();
+    this.lottiePlaying = [];
     this.onMouseMove();
     this.addEventListener("static_assets_loaded", () => {
       this.animateSunRise();
     });
+
+    this.addEventListener("lottie_assets_loaded", () => {
+      this.loadedSceneItems.lottie.forEach((lottie) => {
+        lottie.addEventListener("lottie_playing", () => {
+          this.lottiePlaying.push(lottie.dataset.name);
+        });
+
+        lottie.addEventListener("lottie_completed", () => {
+          const listWithoutCurrent = this.lottiePlaying.filter(
+            (l) => l !== lottie.dataset.name,
+          );
+          this.lottiePlaying = listWithoutCurrent;
+        });
+      });
+    });
+
     this.onReady = onReady;
   }
 
@@ -67,11 +87,10 @@ class Scene extends BaseScene {
     const sunEl = this.loadedSceneItems.static.find(
       (item) => item.dataset.name === "sun",
     );
-    // const sunPath = sunEl.querySelector("path");
-    // const { x, y } = getElementCenter(sunPath);
 
-    sunEl.style.transform = `translateY(${60 * (1 - this.sunPosition)}%)`;
-    this.isSunUp = this.sunPosition >= 0.99;
+    sunEl.style.transformOrigin = `50% ${60 * (1 - this.sunPosition) + 54.4}%`;
+    sunEl.style.transform = `rotate(${360 * this.sunPosition}deg) translateY(${60 * (1 - this.sunPosition)}%)`;
+    this.isSunUp = this.sunPosition >= 0.999;
 
     if (this.isSunUp) {
       this.revealScene();
@@ -109,7 +128,9 @@ class Scene extends BaseScene {
 
   animateParalax() {
     function raf() {
-      this.paralax();
+      if (this.lottiePlaying.length === 0) {
+        this.paralax();
+      }
       window.requestAnimationFrame(raf.bind(this));
     }
     window.requestAnimationFrame(raf.bind(this));

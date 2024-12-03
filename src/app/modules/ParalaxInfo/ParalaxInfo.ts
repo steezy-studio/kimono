@@ -25,7 +25,6 @@ class ParalaxInfo {
   destroy() {
     window.removeEventListener("resize", this.updatePosition);
     this.element.remove();
-    console.log("remove");
   }
 
   updatePosition() {
