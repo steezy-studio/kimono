@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" style="pointer-events: none">
+  <g id="_00-background" data-name="00-background">
+    <path d="M 0,0 l 1920,0 l 0,1080 l -1920,0 Z" style="pointer-events: none" />
+    <rect width="1920" height="1080" fill="none" />
+  </g>
+</svg>
