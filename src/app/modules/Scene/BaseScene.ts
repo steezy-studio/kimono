@@ -21,7 +21,13 @@ class BaseScene extends EventTarget {
 
   constructor(rootId: string) {
     super();
-    this.rootEl = document.getElementById(rootId)!;
+
+    const container = document.getElementById(rootId)!;
+    const viewportEl = document.createElement("div");
+    viewportEl.classList.add("viewport");
+    container.appendChild(viewportEl);
+    this.rootEl = viewportEl;
+
     this.loadedSceneItems = { static: [], lottie: [], items: [] };
     const staticItemsCount = config.data.filter(
       (i) => i.__typename === "STATIC",
