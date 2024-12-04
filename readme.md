@@ -10,7 +10,7 @@ This scene is intended to be used within Webflow.io platform.
     </head>
     <body>
         <div id="root" class="root" />
-        <script src="https://cdn.jsdelivr.net/gh/rotwanghaus/kimono@latest/dist/index.js" defer="" type="module" />
+        <script src="https://cdn.jsdelivr.net/gh/rotwanghaus/kimono@latest/dist/index.js" defer="" type="module"></script>
     </body>
 </html>
 ```
