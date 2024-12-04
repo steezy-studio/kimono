@@ -10,5 +10,5 @@ This scene is intended to be used within Webflow.io platform.
 ```
 2. Append js script at the end of body
 ```html
-<script src="https://cdn.jsdelivr.net/gh/rotwanghaus/kimono@latest/dist/index.js" defer="" />
+<script src="https://cdn.jsdelivr.net/gh/rotwanghaus/kimono@latest/dist/index.js" defer="" type="module" />
 ```
