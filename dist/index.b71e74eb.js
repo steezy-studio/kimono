@@ -611,6 +611,22 @@ var _sceneDefault = parcelHelpers.interopDefault(_scene);
 const dat = require("2dd0c2de9c45054f");
 const scene = new (0, _sceneDefault.default)("root");
 scene.onReady = ()=>{
+    //   if (process.env.NODE_ENV === "production") return;
+    function fpsMeter() {
+        let prevTime = Date.now(), frames = 0;
+        requestAnimationFrame(function loop() {
+            const time = Date.now();
+            frames++;
+            if (time > prevTime + 1000) {
+                let fps = Math.round(frames * 1000 / (time - prevTime));
+                prevTime = time;
+                frames = 0;
+                console.info("FPS: ", fps);
+            }
+            requestAnimationFrame(loop);
+        });
+    }
+    fpsMeter();
     const gui = new dat.GUI({
         name: "Settings"
     });
@@ -621,11 +637,6 @@ scene.onReady = ()=>{
     const layers = Array.from(document.querySelectorAll(".layer"));
     const svgs = Array.from(document.querySelectorAll(".layer svg"));
     const paths = Array.from(document.querySelectorAll(".layer svg path"));
-    console.log({
-        layers,
-        svgs,
-        paths
-    });
     let labels = [];
     gui.add({
         debug: false
@@ -3102,7 +3113,7 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
                 setTimeout(()=>{
                     item.classList.add("reveal");
                     res("");
-                }, i * 150);
+                }, i * 80);
             });
         });
         Promise.all(staggeredScene).then(()=>{
@@ -3111,9 +3122,9 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
         });
     }
     sunrise() {
-        const sunTarget = this.sceneItemsCount.total / this.loadedSceneItems.items.length;
+        const sunTarget = this.loadedSceneItems.lottie.length / this.sceneItemsCount.lottie;
         const distance = sunTarget - this.sunPosition;
-        const step = 0.01;
+        const step = 0.02;
         this.sunPosition += distance * step;
         const sunEl = this.loadedSceneItems.static.find((item)=>item.dataset.name === "sun");
         sunEl.style.transformOrigin = `50% ${60 * (1 - this.sunPosition) + 54.4}%`;
@@ -3136,10 +3147,10 @@ var _baseSceneDefault = parcelHelpers.interopDefault(_baseScene);
             const paralaxPositionX = this.paralaxPosition.x * paralaxDistance;
             const paralaxPositionY = this.paralaxPosition.y * paralaxDistance;
             const pathCenterXNorm = (pathX - vWhalf) / vWhalf;
-            const scale = 1 - pathCenterXNorm * this.paralaxPosition.x * -0.2 * paralaxAmount;
+            const scale = 1 - pathCenterXNorm * this.paralaxPosition.x * 0.2 * paralaxAmount;
             item.style.transform = `
-        rotateY(${this.paralaxPosition.x * 2}deg)
-        rotateX(${-1 * this.paralaxPosition.y * 2}deg)
+        rotateY(${this.paralaxPosition.x * 2.5}deg)
+        rotateX(${-1 * this.paralaxPosition.y * 2.5}deg)
         scale(${scale})
         translate(${paralaxPositionX}px, ${paralaxPositionY}px)
       `;

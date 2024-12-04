@@ -68,7 +68,7 @@ class Scene extends BaseScene {
         setTimeout(() => {
           item.classList.add("reveal");
           res("");
-        }, i * 150);
+        }, i * 80);
       });
     });
 
@@ -80,9 +80,9 @@ class Scene extends BaseScene {
 
   sunrise() {
     const sunTarget =
-      this.sceneItemsCount.total / this.loadedSceneItems.items.length;
+      this.loadedSceneItems.lottie.length / this.sceneItemsCount.lottie;
     const distance = sunTarget - this.sunPosition;
-    const step = 0.01;
+    const step = 0.02;
     this.sunPosition += distance * step;
     const sunEl = this.loadedSceneItems.static.find(
       (item) => item.dataset.name === "sun",
@@ -115,11 +115,11 @@ class Scene extends BaseScene {
       const paralaxPositionY = this.paralaxPosition.y * paralaxDistance;
       const pathCenterXNorm = (pathX - vWhalf) / vWhalf;
       const scale =
-        1 - pathCenterXNorm * this.paralaxPosition.x * 0.2 * -1 * paralaxAmount;
+        1 - pathCenterXNorm * this.paralaxPosition.x * 0.2 * paralaxAmount;
 
       item.style.transform = `
-        rotateY(${this.paralaxPosition.x * 2}deg)
-        rotateX(${-1 * this.paralaxPosition.y * 2}deg)
+        rotateY(${this.paralaxPosition.x * 2.5}deg)
+        rotateX(${-1 * this.paralaxPosition.y * 2.5}deg)
         scale(${scale})
         translate(${paralaxPositionX}px, ${paralaxPositionY}px)
       `;

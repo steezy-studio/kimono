@@ -51,6 +51,10 @@ img {
   opacity: 0;
 }
 
+.layer.hidden path {
+  pointer-events: none;
+}
+
 .layer[data-name="sun"], .layer[data-name="background"] {
   opacity: 1;
 }
@@ -65,9 +69,6 @@ img {
 .layer svg path {
   opacity: 0;
   pointer-events: all;
-}
-
-.layer svg path:hover {
   cursor: pointer;
 }
 
@@ -75,11 +76,17 @@ img {
   opacity: .5;
 }
 
+.layer.static path {
+  cursor: default;
+}
+
 .paralax-info {
   white-space: pre-line;
   background-color: #fff;
   width: auto;
   height: auto;
+  font-family: CommitMono;
+  font-size: 12px;
   display: block;
   position: absolute;
   transform: translate(-50%, -50%);

@@ -4,6 +4,26 @@ import Scene from "./modules/Scene";
 
 const scene = new Scene("root");
 scene.onReady = () => {
+  //   if (process.env.NODE_ENV === "production") return;
+  function fpsMeter() {
+    let prevTime = Date.now(),
+      frames = 0;
+
+    requestAnimationFrame(function loop() {
+      const time = Date.now();
+      frames++;
+      if (time > prevTime + 1000) {
+        let fps = Math.round((frames * 1000) / (time - prevTime));
+        prevTime = time;
+        frames = 0;
+
+        console.info("FPS: ", fps);
+      }
+
+      requestAnimationFrame(loop);
+    });
+  }
+  fpsMeter();
   const gui = new dat.GUI({ name: "Settings" });
   gui.close();
   const folder = gui.addFolder("paralaxAmount");
@@ -12,7 +32,6 @@ scene.onReady = () => {
   const layers = Array.from(document.querySelectorAll(".layer")) as HTMLElement[];
   const svgs = Array.from(document.querySelectorAll(".layer svg"));
   const paths = Array.from(document.querySelectorAll(".layer svg path"));
-  console.log({ layers, svgs, paths });
 
   let labels: ParalaxInfo[] = [];
 
