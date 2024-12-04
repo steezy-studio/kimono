@@ -45,6 +45,10 @@ img {
 
   &.hidden {
     opacity: 0;
+
+    path {
+      pointer-events: none;
+    }
   }
 
   &[data-name="sun"],
@@ -71,14 +75,17 @@ img {
     path {
       opacity: 0;
       pointer-events: all;
-
-      &:hover {
-        cursor: pointer;
-      }
+      cursor: pointer;
     }
 
     &.debug path {
       opacity: 0.5;
+    }
+  }
+
+  &.static {
+    path {
+      cursor: default;
     }
   }
 }
@@ -91,4 +98,6 @@ img {
   background-color: white;
   transform: translate(-50%, -50%);
   white-space: pre-line;
+  font-family: "CommitMono";
+  font-size: 12px;
 }
