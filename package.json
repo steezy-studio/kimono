@@ -15,6 +15,7 @@
     "@types/dat.gui": "^0.7.13",
     "@types/node": "^22.10.1",
     "parcel": "^2.13.2",
+    "parcel-namer-hashless": "^1.0.7",
     "parcel-reporter-static-files-copy": "^1.5.3",
     "sass": "^1.81.0",
     "typescript": "^5.7.2"

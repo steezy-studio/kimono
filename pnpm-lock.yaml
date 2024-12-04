@@ -33,6 +33,9 @@ importers:
       parcel:
         specifier: ^2.13.2
         version: 2.13.2(@swc/helpers@0.5.15)(typescript@5.7.2)
+      parcel-namer-hashless:
+        specifier: ^1.0.7
+        version: 1.0.7(@parcel/core@2.13.2(@swc/helpers@0.5.15))
       parcel-reporter-static-files-copy:
         specifier: ^1.5.3
         version: 1.5.3(@parcel/core@2.13.2(@swc/helpers@0.5.15))
@@ -878,6 +881,10 @@ packages:
 
   ordered-binary@1.5.3:
     resolution: {integrity: sha512-oGFr3T+pYdTGJ+YFEILMpS3es+GiIbs9h/XQrclBXUtd44ey7XwfsMzM31f64I1SQOawDoDr/D823kNCADI8TA==}
+
+  parcel-namer-hashless@1.0.7:
+    resolution: {integrity: sha512-UzDAc47AH6gnzs8xiSkY3k8pVEGWurPiH+0RznWBCCiM35ybuehoVmAbu00AjaDSQ4DJKcVBjDvc+UYmN08vVw==}
+    engines: {node: '>= 16.0.0', parcel: 2.x}
 
   parcel-reporter-static-files-copy@1.5.3:
     resolution: {integrity: sha512-Ukq2SyJYn3GFIPCLamXuQ+2t+0j54llujjOUoRjtmVvfsuGnJDEpMznADeIoKuQDvy0jpxtWzWkQvxqI/j+U4A==}
@@ -2015,6 +2022,14 @@ snapshots:
   nullthrows@1.1.1: {}
 
   ordered-binary@1.5.3: {}
+
+  parcel-namer-hashless@1.0.7(@parcel/core@2.13.2(@swc/helpers@0.5.15)):
+    dependencies:
+      '@parcel/namer-default': 2.13.2(@parcel/core@2.13.2(@swc/helpers@0.5.15))
+      '@parcel/plugin': 2.13.2(@parcel/core@2.13.2(@swc/helpers@0.5.15))
+      '@swc/helpers': 0.5.15
+    transitivePeerDependencies:
+      - '@parcel/core'
 
   parcel-reporter-static-files-copy@1.5.3(@parcel/core@2.13.2(@swc/helpers@0.5.15)):
     dependencies:
