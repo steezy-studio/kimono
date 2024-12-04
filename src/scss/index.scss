@@ -9,7 +9,7 @@ img {
   display: block;
 }
 
-.viewport {
+.root {
   width: 100vw;
   height: auto;
   overflow: hidden;
@@ -21,7 +21,7 @@ img {
   }
 }
 
-.root {
+.viewport {
   height: 100%;
   aspect-ratio: 16/9;
   position: relative;
