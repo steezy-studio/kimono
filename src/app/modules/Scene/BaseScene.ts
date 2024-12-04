@@ -83,7 +83,12 @@ class BaseScene extends EventTarget {
     container.setAttribute("data-name", layer.name);
     container.setAttribute("data-paralax-amount", String(layer.paralaxAmount));
 
-    const eventMapSrc = [".", "assets", layer.folder, "object.svg"].join("/");
+    const eventMapSrc = [
+      process.env.BASE_PATH,
+      "assets",
+      layer.folder,
+      "object.svg",
+    ].join("/");
     const eventMap = await createElementFromString(eventMapSrc);
     container.appendChild(eventMap);
 
@@ -100,7 +105,12 @@ class BaseScene extends EventTarget {
   async createStaticLayer(layer: StaticLayer) {
     const container = await this.createContainer(layer);
     const image = new Image();
-    image.src = [".", "assets", layer.folder, layer.asset.src].join("/");
+    image.src = [
+      process.env.BASE_PATH,
+      "assets",
+      layer.folder,
+      layer.asset.src,
+    ].join("/");
     container.appendChild(image);
     image.onload = () => this.registerLoadedAsset(container, layer);
   }

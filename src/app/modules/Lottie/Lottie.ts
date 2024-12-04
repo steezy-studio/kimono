@@ -26,7 +26,12 @@ class LottiePlayer {
   private initLottie() {
     this.ref = lottie.loadAnimation({
       container: this.lottieContainer,
-      path: [".", "assets", this.config.folder, "data.json"].join("/"),
+      path: [
+        process.env.BASE_PATH,
+        "assets",
+        this.config.folder,
+        "data.json",
+      ].join("/"),
       autoplay: false,
       loop: false,
       renderer: "canvas",
