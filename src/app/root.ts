@@ -1,10 +1,13 @@
 import dat = require("dat.gui");
+import { config, phoneConfig } from "../consts/config";
 import ParalaxInfo from "./modules/ParalaxInfo/ParalaxInfo";
 import Scene from "./modules/Scene";
+const phoneSize = 600;
+const isPhone = window.innerWidth < phoneSize;
+const scene = new Scene("root", isPhone ? phoneConfig : config);
 
-const scene = new Scene("root");
 scene.onReady = () => {
-  //   if (process.env.NODE_ENV === "production") return;
+  if (process.env.NODE_ENV === "production") return;
   function fpsMeter() {
     let prevTime = Date.now(),
       frames = 0;
