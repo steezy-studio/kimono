@@ -1,4 +1,4 @@
-import _config, {
+import {
   Config,
   ConfigItem,
   LottieLayer,
@@ -6,7 +6,6 @@ import _config, {
 } from "../../../consts/config";
 import createElementFromString from "../../../utils/createElementFromString";
 import LottiePlayer from "../Lottie/Lottie";
-const config = _config as Config;
 const resizeLottie = new CustomEvent("resize_lottie");
 
 class BaseScene extends EventTarget {
@@ -18,21 +17,21 @@ class BaseScene extends EventTarget {
   };
   sceneItemsCount: { static: number; lottie: number; total: number };
   loadedAssets: number;
+  config: Config;
 
-  constructor(rootId: string) {
+  constructor(rootId: string, config: Config) {
     super();
-
     const container = document.getElementById(rootId)!;
     const viewportEl = document.createElement("div");
     viewportEl.classList.add("viewport");
     container.appendChild(viewportEl);
     this.rootEl = viewportEl;
-
+    this.config = config;
     this.loadedSceneItems = { static: [], lottie: [], items: [] };
-    const staticItemsCount = config.data.filter(
+    const staticItemsCount = this.config.data.filter(
       (i) => i.__typename === "STATIC",
     ).length;
-    const totalItemsCount = config.data.length;
+    const totalItemsCount = this.config.data.length;
     this.sceneItemsCount = {
       static: staticItemsCount,
       lottie: totalItemsCount - staticItemsCount,
@@ -97,7 +96,7 @@ class BaseScene extends EventTarget {
   }
 
   async createLayers() {
-    for (const layer of config.data) {
+    for (const layer of this.config.data) {
       if (layer.__typename === "STATIC") await this.createStaticLayer(layer);
       if (layer.__typename === "LOTTIE") await this.createLottieLayer(layer);
     }

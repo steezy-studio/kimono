@@ -1,3 +1,4 @@
+import { Config } from "../../../consts/config";
 import getElementCenter from "../../../utils/getElementCenter";
 import isTouchDevice from "../../../utils/isTouchDevice";
 import BaseScene from "./BaseScene";
@@ -21,8 +22,8 @@ class Scene extends BaseScene {
   onReady: () => void;
   lottiePlaying: string[];
 
-  constructor(appId: string, onReady?: () => void) {
-    super(appId);
+  constructor(appId: string, config: Config, onReady?: () => void) {
+    super(appId, config);
     this.paralaxDestination = { x: 0, y: 0 };
     this.paralaxPosition = { x: 0, y: 0 };
     this.isSunUp = false;
