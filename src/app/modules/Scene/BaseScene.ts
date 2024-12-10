@@ -82,6 +82,7 @@ class BaseScene extends EventTarget {
     container.classList.add("layer", type);
     container.setAttribute("data-name", layer.name);
     container.setAttribute("data-paralax-amount", String(layer.paralaxAmount));
+    container.style.zIndex = String(layer.zIndex);
 
     const eventMapSrc = [
       process.env.BASE_PATH,
