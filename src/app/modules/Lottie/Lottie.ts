@@ -62,7 +62,7 @@ class LottiePlayer {
         this.ref = lottie.loadAnimation({
           container: this.lottieContainer,
           animationData: json,
-          assetsPath: `blob:${process.env.BASE_PATH}/`,
+          assetsPath: `blob:${window.location.origin}/`,
           autoplay: false,
           loop: false,
           renderer: "svg",
