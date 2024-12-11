@@ -24,17 +24,19 @@ class LottiePlayer {
 
   private loadAssets(basePath: string) {
     function loadSeqence(json) {
-      const images = json.assets.map((asset) => {
-        return fetch(`${basePath}/images/${asset.p}`, {
-          headers: { "Content-Type": "image/png" },
-        }).then((r) =>
-          r.blob().then((blob) => {
-            const blobUrl = URL.createObjectURL(blob);
-            const slug = blobUrl.split("/")[3];
-            asset.p = slug;
-          }),
-        );
-      });
+      const images = json.assets
+        .filter((asset) => asset.p)
+        .map((asset) => {
+          return fetch(`${basePath}/images/${asset.p}`, {
+            headers: { "Content-Type": "image/png" },
+          }).then((r) =>
+            r.blob().then((blob) => {
+              const blobUrl = URL.createObjectURL(blob);
+              const slug = blobUrl.split("/")[3];
+              asset.p = slug;
+            }),
+          );
+        });
       return images;
     }
 
