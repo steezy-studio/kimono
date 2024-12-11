@@ -65,7 +65,10 @@ class LottiePlayer {
           animationData: json,
           autoplay: false,
           loop: false,
-          renderer: "svg",
+          renderer: "canvas",
+          rendererSettings: {
+            progressiveLoad: true,
+          },
         });
 
         this.ref.addEventListener("complete", () => {
