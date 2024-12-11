@@ -119,18 +119,20 @@ class BaseScene extends EventTarget {
       lottieContainer: container,
     });
 
-    const path = container.querySelector("path");
-    path.addEventListener("click", () => {
-      lottie.play();
-    });
+    lottie.initLottie().then(() => {
+      const path = container.querySelector("path");
+      path.addEventListener("click", () => {
+        lottie.play();
+      });
 
-    container.addEventListener("resize_lottie", () => {
-      lottie.ref.resize();
-    });
+      container.addEventListener("resize_lottie", () => {
+        lottie.ref.resize();
+      });
 
-    lottie.ref.addEventListener("loaded_images", () =>
-      this.registerLoadedAsset(container, layer),
-    );
+      lottie.ref.addEventListener("loaded_images", () =>
+        this.registerLoadedAsset(container, layer),
+      );
+    });
   }
 }
 

@@ -17,6 +17,8 @@
     "parcel": "^2.13.2",
     "parcel-namer-hashless": "^1.0.7",
     "parcel-reporter-static-files-copy": "^1.5.3",
+    "path-browserify": "^1.0.0",
+    "process": "^0.11.10",
     "sass": "^1.81.0",
     "typescript": "^5.7.2"
   },
