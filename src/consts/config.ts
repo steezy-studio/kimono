@@ -74,7 +74,7 @@ const config: Config = {
       paralaxAmount: 0.05,
       folder: "14-cloud-right",
       asset: {
-        src: "14-cloud_right.png",
+        src: "14-cloud-right.png",
         width: 1920,
         height: 1080,
       },

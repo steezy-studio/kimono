@@ -83,17 +83,20 @@ class Scene extends BaseScene {
     const sunTarget =
       this.loadedSceneItems.lottie.length / this.sceneItemsCount.lottie;
     const distance = sunTarget - this.sunPosition;
-    const step = 0.02;
+    const step = 0.03;
     this.sunPosition += distance * step;
     const sunEl = this.loadedSceneItems.static.find(
       (item) => item.dataset.name === "sun",
     );
 
-    sunEl.style.transformOrigin = `50% ${60 * (1 - this.sunPosition) + 54.4}%`;
-    sunEl.style.transform = `rotate(${360 * this.sunPosition}deg) translateY(${60 * (1 - this.sunPosition)}%)`;
+    sunEl.style.transformOrigin = `50% ${0 * 60 * (1 - this.sunPosition) + 54.4}%`;
+    sunEl.classList.add("sun", "rotate");
+    // sunEl.style.transform = `rotate(${180 * this.sunPosition + 180}deg) translateY(${0 * 60 * (1 - this.sunPosition)}%)`;
     this.isSunUp = this.sunPosition >= 0.999;
 
     if (this.isSunUp) {
+      sunEl.classList.remove("rotate");
+      sunEl.classList.add("animation-paused");
       this.revealScene();
     }
   }

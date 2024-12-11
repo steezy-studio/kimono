@@ -105,12 +105,8 @@ class BaseScene extends EventTarget {
   async createStaticLayer(layer: StaticLayer) {
     const container = await this.createContainer(layer);
     const image = new Image();
-    image.src = [
-      process.env.BASE_PATH,
-      "assets",
-      layer.folder,
-      layer.asset.src,
-    ].join("/");
+    // prettier-ignore
+    image.src = [process.env.BASE_PATH, "assets", layer.folder, layer.asset.src].join("/");
     container.appendChild(image);
     image.onload = () => this.registerLoadedAsset(container, layer);
   }
