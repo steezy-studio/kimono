@@ -90,10 +90,13 @@ class Scene extends BaseScene {
     );
 
     sunEl.style.transformOrigin = `50% ${0 * 60 * (1 - this.sunPosition) + 54.4}%`;
-    sunEl.style.transform = `rotate(${180 * this.sunPosition + 180}deg) translateY(${0 * 60 * (1 - this.sunPosition)}%)`;
+    sunEl.classList.add("sun", "rotate");
+    // sunEl.style.transform = `rotate(${180 * this.sunPosition + 180}deg) translateY(${0 * 60 * (1 - this.sunPosition)}%)`;
     this.isSunUp = this.sunPosition >= 0.999;
 
     if (this.isSunUp) {
+      sunEl.classList.remove("rotate");
+      sunEl.classList.add("animation-paused");
       this.revealScene();
     }
   }
