@@ -3,7 +3,6 @@ import {
   LottieLayer,
   LottieLayer as LottieLayerConfig,
 } from "../../../consts/config";
-import path = require("path");
 
 interface LottiePlayerProps extends LottieLayerConfig {
   appContainer: HTMLElement;
