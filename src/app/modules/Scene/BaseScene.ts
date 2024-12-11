@@ -129,9 +129,7 @@ class BaseScene extends EventTarget {
         lottie.ref.resize();
       });
 
-      lottie.ref.addEventListener("loaded_images", () =>
-        this.registerLoadedAsset(container, layer),
-      );
+      this.registerLoadedAsset(container, layer);
     });
   }
 }
