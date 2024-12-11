@@ -4,7 +4,6 @@ async function requestAsset(
   onError: (e: any) => void,
   contentType: string = "application/json",
 ) {
-  console.log(contentType);
   try {
     const response = await fetch(asset, {
       headers: {
@@ -31,7 +30,6 @@ export default async function loadAssets(
 
   const onLoad = () => {
     fetchedCount += 1;
-    console.log(`${fetchedCount} / ${length}`);
   };
 
   const onError = (e: any) => {
