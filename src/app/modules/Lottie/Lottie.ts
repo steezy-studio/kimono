@@ -34,6 +34,7 @@ class LottiePlayer {
               const blobUrl = URL.createObjectURL(blob);
               const slug = blobUrl.split("/")[3];
               asset.p = slug;
+              asset.u = `blob:${window.location.origin}/`;
             }),
           );
         });
@@ -62,7 +63,6 @@ class LottiePlayer {
         this.ref = lottie.loadAnimation({
           container: this.lottieContainer,
           animationData: json,
-          assetsPath: `blob:${window.location.origin}/`,
           autoplay: false,
           loop: false,
           renderer: "svg",
