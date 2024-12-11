@@ -1,10 +1,10 @@
 import dat = require("dat.gui");
-import { config, phoneConfig } from "../consts/config";
+import { config } from "../consts/config";
 import ParalaxInfo from "./modules/ParalaxInfo/ParalaxInfo";
 import Scene from "./modules/Scene";
-const phoneSize = 600;
-const isPhone = window.innerWidth < phoneSize;
-const scene = new Scene("root", isPhone ? phoneConfig : config);
+// const phoneSize = 600;
+// const isPhone = window.innerWidth < phoneSize;
+const scene = new Scene("root", config);
 
 scene.onReady = () => {
   if (process.env.NODE_ENV === "production") return;

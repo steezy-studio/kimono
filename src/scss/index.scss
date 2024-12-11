@@ -21,6 +21,24 @@ img {
   }
 }
 
+.sun.rotate {
+  animation: rotate 5s infinite linear;
+}
+
+.animation-paused {
+  animation-play-state: paused;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .viewport {
   height: 100%;
   aspect-ratio: 16/9;
