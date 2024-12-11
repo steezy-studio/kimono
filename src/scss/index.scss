@@ -50,6 +50,11 @@ img {
   @media (min-width: 1921px) {
     transform: scale(1.12);
   }
+
+  @media (min-width: 2401px) {
+    transform: scale(1.15);
+    perspective: 1800px;
+  }
 }
 
 .layer {
