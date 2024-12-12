@@ -84,7 +84,7 @@ class BaseScene extends EventTarget {
     container.style.zIndex = String(layer.zIndex);
 
     const eventMapSrc = [
-      process.env.BASE_PATH,
+      window.location.origin,
       "assets",
       layer.folder,
       "object.svg",
@@ -106,7 +106,7 @@ class BaseScene extends EventTarget {
     const container = await this.createContainer(layer);
     const image = new Image();
     // prettier-ignore
-    image.src = [process.env.BASE_PATH, "assets", layer.folder, layer.asset.src].join("/");
+    image.src = [window.location.origin, "assets", layer.folder, layer.asset.src].join("/");
     container.appendChild(image);
     image.onload = () => this.registerLoadedAsset(container, layer);
   }
