@@ -54,7 +54,7 @@ class LottiePlayer {
   initLottie() {
     return new Promise((res) => {
       const basePath = [
-        window.location.origin,
+        process.env.BASE_PATH,
         "assets",
         this.config.folder,
       ].join("/");
